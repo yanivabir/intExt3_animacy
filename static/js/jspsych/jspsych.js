@@ -31,6 +31,17 @@ window.jsPsych = (function() {
   var waiting = false;
   // done loading?
   var loaded = false;
+  var loadfail = false;
+
+  // storing a single webaudio context to prevent problems with multiple inits
+  // of jsPsych
+  core.webaudio_context = null;
+  // temporary patch for Safari
+  if (typeof window !== 'undefined' && window.hasOwnProperty('webkitAudioContext') && !window.hasOwnProperty('AudioContext')) {
+    window.AudioContext = webkitAudioContext;
+  }
+  // end patch
+  core.webaudio_context = (typeof window !== 'undefined' && typeof window.AudioContext !== 'undefined') ? new AudioContext() : null;
 
   // enumerated variables for special parameter types
   core.ALL_KEYS = 'allkeys';
@@ -54,6 +65,7 @@ window.jsPsych = (function() {
     paused = false;
     waiting = false;
     loaded = false;
+    loadfail = false;
     jsPsych.data.reset();
 
     var defaults = {
@@ -75,12 +87,14 @@ window.jsPsych = (function() {
       },
       'preload_images': [],
       'preload_audio': [],
+      'use_webaudio': true,
       'exclusions': {},
       'show_progress_bar': false,
       'auto_update_progress_bar': true,
       'auto_preload': true,
       'show_preload_progress_bar': true,
       'max_load_time': 60000,
+      'max_preload_attempts': 10,
       'default_iti': 0
     };
 
@@ -135,6 +149,9 @@ window.jsPsych = (function() {
       timeline: opts.timeline
     });
 
+    // initialize audio context based on options and browser capabilities
+    jsPsych.pluginAPI.initAudio();
+
     // below code resets event listeners that may have lingered from
     // a previous incomplete experiment loaded in same DOM.
     jsPsych.pluginAPI.reset(opts.display_element);
@@ -152,8 +169,8 @@ window.jsPsych = (function() {
           jsPsych.pluginAPI.autoPreload(timeline, startExperiment, opts.preload_images, opts.preload_audio, opts.show_preload_progress_bar);
           if(opts.max_load_time > 0){
             setTimeout(function(){
-              if(!loaded){
-                loadFail();
+              if(!loaded && !loadfail){
+                core.loadFail();
               }
             }, opts.max_load_time);
           }
@@ -277,10 +294,12 @@ window.jsPsych = (function() {
 
   core.addNodeToEndOfTimeline = function(new_timeline, preload_callback){
     timeline.insert(new_timeline);
-    if(opts.auto_preload){
-      jsPsych.pluginAPI.autoPreload(timeline, preload_callback);
-    } else {
-      preload_callback();
+    if(typeof preload_callback !== 'undefinded'){
+      if(opts.auto_preload){
+        jsPsych.pluginAPI.autoPreload(timeline, preload_callback);
+      } else {
+        preload_callback();
+      }
     }
   }
 
@@ -294,6 +313,12 @@ window.jsPsych = (function() {
       waiting = false;
       nextTrial();
     }
+  }
+
+  core.loadFail = function(message){
+    message = message || '<p>The experiment failed to load.</p>';
+    loadfail = true;
+    DOM_target.innerHTML = message;
   }
 
   function TimelineNode(parameters, parent, relativeID) {
@@ -750,7 +775,6 @@ window.jsPsych = (function() {
     }
 
     global_trial_index++;
-    current_trial_finished = false;
 
     // advance timeline
     timeline.markCurrentTrialComplete();
@@ -773,6 +797,7 @@ window.jsPsych = (function() {
   function doTrial(trial) {
 
     current_trial = trial;
+    current_trial_finished = false;
 
     // process all timeline variables for this trial
     evaluateTimelineVariables(trial);
@@ -790,6 +815,12 @@ window.jsPsych = (function() {
     if(typeof trial.on_start == 'function'){
       trial.on_start(trial);
     }
+
+    // apply the focus to the element containing the experiment.
+    DOM_container.focus();
+
+    // reset the scroll on the DOM target
+    DOM_target.scrollTop = 0;
 
     // execute trial method
     jsPsych.plugins[trial.type].trial(DOM_target, trial);
@@ -850,10 +881,6 @@ window.jsPsych = (function() {
         }
       }
     }
-  }
-
-  function loadFail(){
-    DOM_target.innerHTML = '<p>The experiment failed to load.</p>';
   }
 
   function checkExclusions(exclusions, success, fail){
@@ -1671,7 +1698,7 @@ jsPsych.randomization = (function() {
     }
 
     var random_shuffle = shuffle(arr);
-    for (var i = 0; i < random_shuffle.length - 2; i++) {
+    for (var i = 0; i < random_shuffle.length - 1; i++) {
       if (equalityTest(random_shuffle[i], random_shuffle[i + 1])) {
         // neighbors are equal, pick a new random neighbor to swap (not the first or last element, to avoid edge cases)
         var random_pick = Math.floor(Math.random() * (random_shuffle.length - 2)) + 1;
@@ -1909,6 +1936,9 @@ jsPsych.pluginAPI = (function() {
       }
 
       if (valid_response) {
+        // if this is a valid response, then we don't want the key event to trigger other actions
+        // like scrolling via the spacebar.
+        e.preventDefault();
 
         parameters.callback_function({
           key: e.keyCode,
@@ -2092,17 +2122,19 @@ jsPsych.pluginAPI = (function() {
   }
 
   // audio //
-
-  // temporary patch for Safari
-  if (typeof window !== 'undefined' && window.hasOwnProperty('webkitAudioContext') && !window.hasOwnProperty('AudioContext')) {
-    window.AudioContext = webkitAudioContext;
-  }
-  // end patch
-
-  var context = (typeof window !== 'undefined' && typeof window.AudioContext !== 'undefined') ? new AudioContext() : null;
+  var context = null;
   var audio_buffers = [];
 
+  module.initAudio = function(){
+    context = (jsPsych.initSettings().use_webaudio == true) ? jsPsych.webaudio_context : null;
+  }
+
   module.audioContext = function(){
+    if(context !== null){
+      if(context.state !== 'running'){
+        context.resume();
+      }
+    }
     return context;
   }
 
@@ -2137,7 +2169,8 @@ jsPsych.pluginAPI = (function() {
       return;
     }
 
-    function load_audio_file_webaudio(source){
+    function load_audio_file_webaudio(source, count){
+      count = count || 1;
       var request = new XMLHttpRequest();
       request.open('GET', source, true);
       request.responseType = 'arraybuffer';
@@ -2153,10 +2186,20 @@ jsPsych.pluginAPI = (function() {
           console.error('Error loading audio file: ' + bufferID);
         });
       }
+      request.onerror = function(){
+        if(count < jsPsych.initSettings().max_preload_attempts){
+          setTimeout(function(){
+            load_audio_file_webaudio(source, count+1)
+          }, 200);
+        } else {
+          jsPsych.loadFail();
+        }
+      }
       request.send();
     }
 
-    function load_audio_file_html5audio(source){
+    function load_audio_file_html5audio(source, count){
+      count = count || 1;
       var audio = new Audio();
       audio.addEventListener('canplaythrough', function(){
         audio_buffers[source] = audio;
@@ -2164,6 +2207,33 @@ jsPsych.pluginAPI = (function() {
         loadfn(n_loaded);
         if(n_loaded == files.length){
           finishfn();
+        }
+      });
+      audio.addEventListener('onerror', function(){
+        if(count < jsPsych.initSettings().max_preload_attempts){
+          setTimeout(function(){
+            load_audio_file_html5audio(source, count+1)
+          }, 200);
+        } else {
+          jsPsych.loadFail();
+        }
+      });
+      audio.addEventListener('onstalled', function(){
+        if(count < jsPsych.initSettings().max_preload_attempts){
+          setTimeout(function(){
+            load_audio_file_html5audio(source, count+1)
+          }, 200);
+        } else {
+          jsPsych.loadFail();
+        }
+      });
+      audio.addEventListener('onabort', function(){
+        if(count < jsPsych.initSettings().max_preload_attempts){
+          setTimeout(function(){
+            load_audio_file_html5audio(source, count+1)
+          }, 200);
+        } else {
+          jsPsych.loadFail();
         }
       });
       audio.src = source;
@@ -2204,7 +2274,9 @@ jsPsych.pluginAPI = (function() {
       return;
     }
 
-    for (var i = 0; i < images.length; i++) {
+    function preload_image(source, count){
+      count = count || 1;
+
       var img = new Image();
 
       img.onload = function() {
@@ -2216,17 +2288,24 @@ jsPsych.pluginAPI = (function() {
       };
 
       img.onerror = function() {
-        n_loaded++;
-        loadfn(n_loaded);
-        if (n_loaded == images.length) {
-          finishfn();
+        if(count < jsPsych.initSettings().max_preload_attempts){
+          setTimeout(function(){
+            preload_image(source, count+1);
+          }, 200);
+        } else {
+          jsPsych.loadFail();
         }
       }
 
-      img.src = images[i];
+      img.src = source;
 
-      img_cache[images[i]] = img;
+      img_cache[source] = img;
     }
+
+    for (var i = 0; i < images.length; i++) {
+      preload_image(images[i]);
+    }
+
   };
 
   module.registerPreload = function(plugin_name, parameter, media_type, conditional_function) {
@@ -2271,6 +2350,10 @@ jsPsych.pluginAPI = (function() {
 
     images = jsPsych.utils.unique(images);
     audio  = jsPsych.utils.unique(audio);
+
+    // remove any 0s, nulls, or false values
+    images = images.filter(function(x) { return x != false && x != null})
+    audio = audio.filter(function(x) { return x != false && x != null})
 
     var total_n = images.length + audio.length;
     var loaded = 0;

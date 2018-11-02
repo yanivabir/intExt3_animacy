@@ -25,15 +25,15 @@ jsPsych.plugins["image-button-response"] = (function() {
         description: 'The image to be displayed'
       },
       choices: {
-        type: jsPsych.plugins.parameterType.KEYCODE,
+        type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Choices',
-        default: [],
+        default: undefined,
         array: true,
         description: 'The labels for the buttons.'
       },
       button_html: {
         type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Button html',
+        pretty_name: 'Button HTML',
         default: '<button class="jspsych-btn">%choice%</button>',
         array: true,
         description: 'The html of the button. Can create own style.'

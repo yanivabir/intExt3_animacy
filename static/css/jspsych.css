@@ -5,70 +5,47 @@
  * experiments look polished without any additional styles.
  */
 
- /* Container holding jsPsych content */
- html{
-   background-color: grey;
- }
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+/* Container holding jsPsych content */
 
- .jspsych-display-element {
-   display: flex;
-   flex-direction: column;
-   /*justify-content: center;
-   align-items: center;*/
-   /*height: 100%;
-   width: 100%;*/
-   overflow-y: scroll;
- }
-
- .jspsych-display-element:focus {
-   outline: none;
- }
-
- .jspsych-content-wrapper {
-   display: flex;
-   /*justify-content: center;
-   align-items: center;*/
-   margin: auto; /* this does the same thing as above two lines in this case */
-   flex: 1 1 100%;
-   width: 100%;
- }
-
- .jspsych-content {
-   max-width: 95%; /* this is mainly an IE 10-11 fix */
-   text-align: left;
-   margin: auto; /* this is for overflowing content */
- }
-
- .jspsych-top {
-   align-items: flex-start;
- }
-
- .jspsych-middle {
-   align-items: center;
- }
-
- .jspsych-brms-frame {
-   top: 50%;
-   transform: translate(-50%, -50%);
- }
-
- .coin_label {
-   display: block;
-   position: relative;
-   text-align: center;
- }
-
-#jspsych-html-keyboard-response-stimulus {
-  width: 800px;
+html {
+  background-color: grey;
 }
 
-#jspsych-survey-likert-form {
-  width: 600px;
+.jspsych-display-element {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.jspsych-display-element:focus {
+  outline: none;
+}
+
+.jspsych-content-wrapper {
+  display: flex;
+  margin: auto;
+  flex: 1 1 100%;
+  width: 100%;
+}
+
+.jspsych-content {
+  max-width: 95%;
+  /* this is mainly an IE 10-11 fix */
+  text-align: center;
+  margin: auto;
+  /* this is for overflowing content */
+}
+
+.jspsych-top {
+  align-items: flex-start;
+}
+
+.jspsych-middle {
+  align-items: center;
 }
 
 /* fonts and type */
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
 
 .jspsych-display-element {
   font-family: 'Open Sans', 'Arial', sans-serif;
@@ -78,12 +55,13 @@
 
 /* Form elements like input fields and buttons */
 
-input[type="text"] {
+.jspsych-display-element input[type="text"] {
   font-family: 'Open Sans', 'Arial', sans-serif;
   font-size: 14px;
 }
 
 /* borrowing Bootstrap style for btn elements, but combining styles a bit */
+
 .jspsych-btn {
   display: inline-block;
   padding: 6px 12px;
@@ -128,10 +106,12 @@ input[type="text"] {
   width: 100%;
   line-height: 1em;
 }
+
 #jspsych-progressbar-container span {
   font-size: 14px;
   padding-right: 14px;
 }
+
 #jspsych-progressbar-outer {
   background-color: #eee;
   width: 50%;
@@ -139,8 +119,9 @@ input[type="text"] {
   height: 14px;
   display: inline-block;
   vertical-align: middle;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
+
 #jspsych-progressbar-inner {
   background-color: #aaa;
   width: 0%;
@@ -148,6 +129,7 @@ input[type="text"] {
 }
 
 /* Control appearance of jsPsych.data.displayData() */
+
 #jspsych-data-display {
   text-align: left;
 }

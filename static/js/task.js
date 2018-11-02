@@ -335,6 +335,14 @@ var post_load = function() {
     }
   };
 
+  // Make main block
+  var main_block = {
+    type: 'html-keyboard-response',
+    choices: ['d', 'k'],
+    timing_post_trial: 900
+  };
+
+
   //
   // /** 3------- PRACTICE INSTRUCTIONS ***/
   //
@@ -910,6 +918,7 @@ var post_load = function() {
     timeline: experiment_blocks,
     fullscreen: true,
     on_finish: function(data) {
+      saveData(data, 'test_data.txt')
       // psiturk.recordUnstructuredData('jsPsych_trial_data',
       //   jsPsych.data.get().json());
       // psiturk.recordUnstructuredData('jsPsych_event_data',
