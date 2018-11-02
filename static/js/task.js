@@ -155,7 +155,7 @@ var post_load = function() {
   ];
 
   // Initiate psiturk
-  // var psiturk = new PsiTurk(uniqueId, adServerLoc, mode); 
+  // var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
   /*** Instructions ***/
   var preCalibInsText = [{
@@ -858,51 +858,49 @@ var post_load = function() {
   // ]);
   //
   //
-  // // Put it all together
-  // var experiment_blocks = [];
-  // experiment_blocks.push(test_animation);
-  // experiment_blocks.push(poor_animation);
-  // experiment_blocks.push(fullscreen);
-  // experiment_blocks.push(preCalibIns)
-  // experiment_blocks.push(makeSureLoop);
+  // Put it all together
+  var experiment_blocks = [];
+  experiment_blocks.push(fullscreen);
+  experiment_blocks.push(preCalibIns)
+  experiment_blocks.push(makeSureLoop);
   // experiment_blocks.push(instructions);
   // experiment_blocks.push(secChanceLoop);
   // experiment_blocks.push(mainBlockIns);
   // experiment_blocks.push(bRMS_block);
   // experiment_blocks = experiment_blocks.concat(debrief);
   //
-  // // Save data to file functions
-  // // var textFile = null,
-  // //   makeTextFile = function(text) {
-  // //     var data = new Blob([text], {
-  // //       type: 'text/plain'
-  // //     });
-  // //
-  // //     // If we are replacing a previously generated file we need to
-  // //     // manually revoke the object URL to avoid memory leaks.
-  // //     if (textFile !== null) {
-  // //       window.URL.revokeObjectURL(textFile);
-  // //     }
-  // //
-  // //     textFile = window.URL.createObjectURL(data);
-  // //
-  // //     // returns a URL you can use as a href
-  // //     return textFile;
-  // //   };
-  // //
-  // // var saveData = function(data, filename) {
-  // //   var link = document.createElement('a');
-  // //   link.setAttribute('download', filename);
-  // //   link.href = makeTextFile(data);
-  // //   document.body.appendChild(link);
-  // //
-  // //   // wait for the link to be added to the document
-  // //   window.requestAnimationFrame(function() {
-  // //     var event = new MouseEvent('click');
-  // //     link.dispatchEvent(event);
-  // //     document.body.removeChild(link);
-  // //   });
-  // // }
+  Save data to file functions
+  var textFile = null,
+    makeTextFile = function(text) {
+      var data = new Blob([text], {
+        type: 'text/plain'
+      });
+
+      // If we are replacing a previously generated file we need to
+      // manually revoke the object URL to avoid memory leaks.
+      if (textFile !== null) {
+        window.URL.revokeObjectURL(textFile);
+      }
+
+      textFile = window.URL.createObjectURL(data);
+
+      // returns a URL you can use as a href
+      return textFile;
+    };
+
+  var saveData = function(data, filename) {
+    var link = document.createElement('a');
+    link.setAttribute('download', filename);
+    link.href = makeTextFile(data);
+    document.body.appendChild(link);
+
+    // wait for the link to be added to the document
+    window.requestAnimationFrame(function() {
+      var event = new MouseEvent('click');
+      link.dispatchEvent(event);
+      document.body.removeChild(link);
+    });
+  }
   //
   //
   // // Initiate experiment
