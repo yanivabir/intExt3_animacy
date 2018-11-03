@@ -21,13 +21,14 @@ var ITI = 1000,
 var exp_images;
 var trial_plan;
 var lags = [];
+var main_block;
 
 Papa.parse("../static/sampImagesInfo.csv", {
   download: true,
   header: true,
   dynamicTyping: true,
   complete: function(results) {
-    exp_images = results.data.slice(0, results.data.length - 1);
+    exp_images = results.data;//.slice(0, results.data.length - 1);
     post_load();
   }
 });
@@ -101,10 +102,10 @@ var post_load = function() {
   var plan_n = exp_images.length + high_clar.length, // total length
     used_indx = [], // array of used indices for assignment
     c_rep_clar = 0; // Counter from clar leves
-    trial_plan = new Array(plan_n); // Preallocate trial plan length
+  trial_plan = new Array(plan_n); // Preallocate trial plan length
 
   // Run over images
-  for (i = 0; i != exp_images.length; i++){
+  for (i = 0; i != exp_images.length; i++) {
     exp_images[i].img_indx = i; // Set original image indx for ref
 
     // Look for next available indx
@@ -116,24 +117,23 @@ var post_load = function() {
     // Assign rep if needed
     if (exp_images[i].clar_level >=
       clar_levels[clar_nsteps - n_repeat_steps]) {
-        var this_rep = jQuery.extend(true, {}, exp_images[i]); // Deep copy
-        // Change attributes
-        this_rep.is_rep = 1;
-        this_rep.prev_indx = j;
-        this_rep.clar_level = rep_clars[c_rep_clar];
-        c_rep_clar ++;
-        // Draw lag
-        var d = Math.floor(Math.random() *
-          (rep_range[1] - rep_range[0] + 1) + rep_range[0]);
-        this_rep.lag = d;
-        lags.push(d);
+      var this_rep = jQuery.extend(true, {}, exp_images[i]); // Deep copy
+      // Change attributes
+      this_rep.is_rep = 1;
+      this_rep.prev_indx = j;
+      this_rep.clar_level = rep_clars[c_rep_clar];
+      c_rep_clar++;
+      // Draw lag
+      var d = Math.floor(Math.random() *
+        (rep_range[1] - rep_range[0] + 1) + rep_range[0]);
+      this_rep.lag = d;
+      lags.push(d);
 
-        // Assign
-        trial_plan.splice(j + d, 1, this_rep);
-        used_indx.push(j+d);
-      }
+      // Assign
+      trial_plan.splice(j + d, 1, this_rep);
+      used_indx.push(j + d);
+    }
   }
-
 
 
   /*** Enter fullscreen ***/
@@ -144,7 +144,6 @@ var post_load = function() {
     and start the HIT, press the button below.</p>'
   }
 
-  /** 1----coin instructions**/
 
   var images = ['/static/images/Nickel.png',
     '/static/images/Penny.png',
@@ -156,6 +155,8 @@ var post_load = function() {
 
   // Initiate psiturk
   // var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
+
+  /** 1----coin instructions**/
 
   /*** Instructions ***/
   var preCalibInsText = [{
@@ -336,10 +337,30 @@ var post_load = function() {
   };
 
   // Make main block
-  var main_block = {
-    type: 'html-keyboard-response',
-    choices: ['d', 'k'],
-    timing_post_trial: 900
+  main_block = {
+    timeline: [{
+        type: 'html-keyboard-response',
+        stimulus: '+',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 500
+      },
+      {
+        type: 'html-keyboard-response',
+        choices: ['d', 'k'],
+        timing_post_trial: 400,
+        stimulus: function() {
+          var name = jsPsych.timelineVariable('name', true),
+          cl = jsPsych.timelineVariable('clar_level', true);
+          return '<img class = "stimulus_img" src="/static/images/' +
+            name + '" width = "400" height = "300"></img>\
+            <img class = "mask_img" src="/static/images/' +
+            name.substr(0, name.length - 4) +
+            '_s.jpg" style="opacity: ' +
+            (1 - cl) + '" width = "400" height = "300"></img>'
+        }
+      }
+    ],
+    timeline_variables: trial_plan
   };
 
 
@@ -868,13 +889,13 @@ var post_load = function() {
   //
   // Put it all together
   var experiment_blocks = [];
-  // experiment_blocks.push(fullscreen);
-  experiment_blocks.push(preCalibIns)
-  experiment_blocks.push(makeSureLoop);
+  experiment_blocks.push(fullscreen);
+  // experiment_blocks.push(preCalibIns)
+  // experiment_blocks.push(makeSureLoop);
   // experiment_blocks.push(instructions);
   // experiment_blocks.push(secChanceLoop);
   // experiment_blocks.push(mainBlockIns);
-  // experiment_blocks.push(bRMS_block);
+  experiment_blocks.push(main_block);
   // experiment_blocks = experiment_blocks.concat(debrief);
   //
   // Save data to file functions
@@ -918,7 +939,7 @@ var post_load = function() {
     timeline: experiment_blocks,
     fullscreen: true,
     on_finish: function(data) {
-      saveData(data, 'test_data.txt')
+      saveData(jsPsych.data.get().json(), 'test_data.txt')
       // psiturk.recordUnstructuredData('jsPsych_trial_data',
       //   jsPsych.data.get().json());
       // psiturk.recordUnstructuredData('jsPsych_event_data',

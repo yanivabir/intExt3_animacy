@@ -12,6 +12,17 @@ html {
   background-color: grey;
 }
 
+
+.stimulus_img{
+  position: fixed;
+  z-index: 0;
+}
+
+.mask_img{
+  z-index: 1;
+  /* position: relative; */
+}
+
 .jspsych-display-element {
   display: flex;
   flex-direction: column;
