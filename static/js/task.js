@@ -1,8 +1,7 @@
 // Parameters
 var ITI = 1000,
   unitSize = 4,
-  breakEvery = 50,
-  trialLength = 0, // 0 is no limit
+  breakEvery = 152,
   clar_range = [0.2, 0.8],
   clar_nsteps = 10,
   n_rep = 2,
@@ -131,6 +130,7 @@ var post_load = function() {
     var j = i;
     while (used_indx.includes(j)) j++;
     trial_plan.splice(j, 1, exp_images[i]);
+    trial_plan[j].trial = j+1;
     used_indx.push(j);
 
     // Assign rep if needed
@@ -150,6 +150,7 @@ var post_load = function() {
 
       // Assign
       trial_plan.splice(j + d, 1, this_rep);
+      trial_plan[j+d].trial = j+d+1;
       used_indx.push(j + d);
     }
   }
@@ -348,6 +349,14 @@ var post_load = function() {
   };
 
   // Make main block
+  var breakMsg = {
+    type: "html-keyboard-response",
+    stimulus: ["<div class = 'center'><p>This is a break.</p>\
+    <p>Press the space bar to continue.</p>"],
+    choices: [32],
+    post_trial_gap: 1600
+  }
+
   main_block = {
     timeline: [{
         type: 'html-keyboard-response',
@@ -368,11 +377,30 @@ var post_load = function() {
             name.substr(0, name.length - 4) +
             '_s.jpg" style="opacity: ' +
             (1 - cl) + '" width = "400" height = "300"></img>'
+        },
+        data: {
+          memorability: jsPsych.timelineVariable('Memorability'),
+          // logitM: jsPsych.timelineVariable('logitM'), // Redundant
+          name: jsPsych.timelineVariable('name'),
+          is_rep: jsPsych.timelineVariable('is_rep'),
+          clar_level: jsPsych.timelineVariable('clar_level'),
+          animate: jsPsych.timelineVariable('animate'),
+          // img_indx: jsPsych.timelineVariable('img_indx'), // Redundant
+          prev_indx: function() {return jsPsych.timelineVariable('prev_indx', true) + 1},
+          trial: jsPsych.timelineVariable('trial')
+        }
+      },
+      {
+        timeline: [breakMsg],
+        conditional_function: function(){
+          return !(jsPsych.data.get().last(1).select('trial').values % breakEvery) &&
+            jsPsych.data.get().last(1).select('trial').values != n_total;
         }
       }
     ],
     timeline_variables: trial_plan
   };
+
 
 
   //
