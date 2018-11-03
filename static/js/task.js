@@ -28,14 +28,33 @@ Papa.parse("../static/sampImagesInfo.csv", {
   header: true,
   dynamicTyping: true,
   complete: function(results) {
-    exp_images = results.data;//.slice(0, results.data.length - 1);
+    exp_images = results.data; //.slice(0, results.data.length - 1);
     post_load();
   }
 });
 
 var post_load = function() {
+
+  /* Preload images */
+  var images = ['/static/images/Nickel.png',
+    '/static/images/Penny.png',
+    '/static/images/Dime.png',
+    '/static/images/Quarter.png',
+    '/static/images/keys.jpg',
+    '/static/images/coin_demo.jpg'
+  ];
+
   var n_total;
   n_total = exp_images.length;
+
+  for (i = 0; i != n_total; i++) {
+    var this_img = exp_images[i].name;
+    images.push('/static/images/' + this_img);
+    images.push('/static/images/' +
+      this_img.substr(0, this_img.length - 4) + '_s.jpg');
+  }
+
+  /* Prepare experimental main block*/
 
   // Set of unique clar_levles
   var clar_levels = [];
@@ -144,14 +163,6 @@ var post_load = function() {
     and start the HIT, press the button below.</p>'
   }
 
-
-  var images = ['/static/images/Nickel.png',
-    '/static/images/Penny.png',
-    '/static/images/Dime.png',
-    '/static/images/Quarter.png',
-    '/static/images/keys.jpg',
-    '/static/images/coin_demo.jpg'
-  ];
 
   // Initiate psiturk
   // var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
@@ -350,7 +361,7 @@ var post_load = function() {
         timing_post_trial: 400,
         stimulus: function() {
           var name = jsPsych.timelineVariable('name', true),
-          cl = jsPsych.timelineVariable('clar_level', true);
+            cl = jsPsych.timelineVariable('clar_level', true);
           return '<img class = "stimulus_img" src="/static/images/' +
             name + '" width = "400" height = "300"></img>\
             <img class = "mask_img" src="/static/images/' +
