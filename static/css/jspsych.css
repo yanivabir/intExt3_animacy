@@ -12,6 +12,10 @@ html {
   background-color: grey;
 }
 
+#fixation{
+  font-size: 50px;
+  font-weight: 600;
+}
 
 .stimulus_img{
   position: fixed;

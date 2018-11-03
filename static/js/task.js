@@ -351,7 +351,7 @@ var post_load = function() {
   main_block = {
     timeline: [{
         type: 'html-keyboard-response',
-        stimulus: '+',
+        stimulus: '<div id="fixation">+</div>',
         choices: jsPsych.NO_KEYS,
         trial_duration: 500
       },
