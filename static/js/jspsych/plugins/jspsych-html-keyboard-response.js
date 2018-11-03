@@ -67,6 +67,10 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
       new_html += trial.prompt;
     }
 
+    // Hide mouse
+    var stylesheet = document.styleSheets[0];
+    stylesheet.insertRule("* {cursor: none;}", stylesheet.cssRules.length);
+
     // draw
     display_element.innerHTML = new_html;
 
@@ -96,6 +100,9 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
 
       // clear the display
       display_element.innerHTML = '';
+
+      // Return mouse
+      stylesheet.deleteRule(stylesheet.cssRules.length - 1);
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
