@@ -358,7 +358,7 @@ var post_load = function() {
       {
         type: 'html-keyboard-response',
         choices: ['d', 'k'],
-        timing_post_trial: 400,
+        post_trial_gap: 400,
         stimulus: function() {
           var name = jsPsych.timelineVariable('name', true),
             cl = jsPsych.timelineVariable('clar_level', true);
