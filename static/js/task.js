@@ -21,6 +21,7 @@ var exp_images;
 var trial_plan;
 var lags = [];
 var main_block;
+var lastWarned = -experiment_performance_trials;
 
 Papa.parse("../static/sampImagesInfo.csv", {
   download: true,
@@ -130,7 +131,7 @@ var post_load = function() {
     var j = i;
     while (used_indx.includes(j)) j++;
     trial_plan.splice(j, 1, exp_images[i]);
-    trial_plan[j].trial = j+1;
+    trial_plan[j].trial = j + 1;
     used_indx.push(j);
 
     // Assign rep if needed
@@ -150,7 +151,7 @@ var post_load = function() {
 
       // Assign
       trial_plan.splice(j + d, 1, this_rep);
-      trial_plan[j+d].trial = j+d+1;
+      trial_plan[j + d].trial = j + d + 1;
       used_indx.push(j + d);
     }
   }
@@ -386,22 +387,74 @@ var post_load = function() {
           clar_level: jsPsych.timelineVariable('clar_level'),
           animate: jsPsych.timelineVariable('animate'),
           // img_indx: jsPsych.timelineVariable('img_indx'), // Redundant
-          prev_indx: function() {return jsPsych.timelineVariable('prev_indx', true) + 1},
+          prev_indx: function() {
+            return jsPsych.timelineVariable('prev_indx', true) + 1
+          },
           trial: jsPsych.timelineVariable('trial')
+        },
+        on_finish: function(data) {
+          if (data.key_press == 75 && data.animate ||
+            data.key_press == 68 && !data.animate) {
+            data.acc = 1;
+          } else {
+            data.acc = 0;
+          }
         }
       },
       {
+        type: 'html-keyboard-response',
         timeline: [breakMsg],
-        conditional_function: function(){
+        conditional_function: function() {
           return !(jsPsych.data.get().last(1).select('trial').values % breakEvery) &&
             jsPsych.data.get().last(1).select('trial').values != n_total;
+        }
+      },
+      {
+        timeline: [{
+          type: 'html-keyboard-response',
+          stimulus: "<div class = 'center'><p>It seems that you have pressed the wrong \
+        key many times recently.</p>\
+        <p>Please perform the task as accurately and as quickly as you can.</p>\
+        <p>Press the space bar to continue.</p>",
+          choices: [32]
+        }],
+        conditional_function: function() {
+          if (jsPsych.data.get().last(1).select('animate').values.length) {
+            var trialN = jsPsych.currentTrial().data.trial, // N of trials so far
+              experiment_performance_cl = clar_levels[clar_nsteps - n_repeat_steps], // high clar thresh
+              acc_trialN = jsPsych.data.get().filterCustom(function(x) {
+                return x.trial != undefined &
+                  x.clar_level >= experiment_performance_cl
+              }).count(); // N of high_clar trials so far
+
+            if (trialN > lastWarned + experiment_performance_trials && // unwarned
+              ((acc_trialN >= experiment_performance_trials && // enough acc trials
+                  jsPsych.data.get().filterCustom(function(x) {
+                    return x.trial != undefined &
+                      x.clar_level >= experiment_performance_cl
+                  }).last(experiment_performance_trials).select('acc').mean() <
+                  experiment_performance_thresh) || //peroformance bad
+                (trialN >= experiment_RT_trials && // sufficient rt data
+                  jsPsych.data.get().filterCustom(function(x) {
+                    return x.trial != undefined
+                  }).last(experiment_RT_trials).filterCustom(function(x) {
+                    return x.rt < experiment_RT_threshold
+                  }).count() >= experiment_RT_trial_threshold) // rt quick
+              )) {
+              lastWarned = jsPsych.currentTrial().data.trial;
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
         }
       }
     ],
     timeline_variables: trial_plan
   };
-
-
+  // var lastWarned = -experiment_performance_trials; //It's up for debugging
 
   //
   // /** 3------- PRACTICE INSTRUCTIONS ***/
@@ -928,7 +981,7 @@ var post_load = function() {
   //
   // Put it all together
   var experiment_blocks = [];
-  experiment_blocks.push(fullscreen);
+  // experiment_blocks.push(fullscreen);
   // experiment_blocks.push(preCalibIns)
   // experiment_blocks.push(makeSureLoop);
   // experiment_blocks.push(instructions);
