@@ -172,182 +172,182 @@ var post_load = function() {
   /** 1----coin instructions**/
 
   /*** Instructions ***/
-  var preCalibInsText = [{
-      stimulus: ["<div class='center'>Welcome to the study!<br> \
-      <p>Your participation will help us investigate human precision and reaction-times in dynamic environments.</p>\
-      <p>Please read the instructions carefully.</p>\
-      <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-      choices: [32]
-    },
-    {
-      stimulus: ["<div class='center'><p>We will begin by calibrating the experiment \
-        for the size of your screen.</p>\
-        <p>After this short calibration, we will continue to the main task for \
-        this study.</p>\
-        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-      choices: [32]
-    },
-    {
-      stimulus: ["<div class='center'><p>For the calibration stage, you will need a coin.</p>\
-        <p>Any US coin will do.</p>\
-        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-      choices: [32]
-    },
-    {
-      stimulus: ["<div class='center'><img src='/static/images/coin_demo.jpg' height='400'></img>\
-        <p>You will be asked to position the coin\
-        as shown in the picture. You will place it against your screen,\
-        within an empty circle presented to you.</p>\
-        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-      choices: [32]
-    },
-    {
-      stimulus: ["<div class='center'><p>Using the up and down arrow keys, \
-        you will then adjust the size of the empty circle, so that it matches the \
-        size of your coin.</p>\
-        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-      choices: [32]
-    },
-    {
-      stimulus: ["<div class='center'><p>Take your time in doing so, as this measurement\
-        will be used throughout the study to make sure images are presented to \
-        you in their correct size.</p>\
-        <p>When you are done adjusting the circle size, press the space bar to \
-        continue to the main task.\
-        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-      choices: [32]
-    },
-    {
-      stimulus: ["<div class='center'><p>Please have a coin at hand.</p>\
-        <p>Press the space bar to start the calibration stage.</p></div>"],
-      choices: [32]
-    }
-  ];
-
-  var preCalibIns = {
-    type: 'html-keyboard-response',
-    timeline: preCalibInsText,
-    timing_post_trial: 400
-  };
+  // var preCalibInsText = [{
+  //     stimulus: ["<div class='center'>Welcome to the study!<br> \
+  //     <p>Your participation will help us investigate human precision and reaction-times in dynamic environments.</p>\
+  //     <p>Please read the instructions carefully.</p>\
+  //     <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+  //     choices: [32]
+  //   },
+  //   {
+  //     stimulus: ["<div class='center'><p>We will begin by calibrating the experiment \
+  //       for the size of your screen.</p>\
+  //       <p>After this short calibration, we will continue to the main task for \
+  //       this study.</p>\
+  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+  //     choices: [32]
+  //   },
+  //   {
+  //     stimulus: ["<div class='center'><p>For the calibration stage, you will need a coin.</p>\
+  //       <p>Any US coin will do.</p>\
+  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+  //     choices: [32]
+  //   },
+  //   {
+  //     stimulus: ["<div class='center'><img src='/static/images/coin_demo.jpg' height='400'></img>\
+  //       <p>You will be asked to position the coin\
+  //       as shown in the picture. You will place it against your screen,\
+  //       within an empty circle presented to you.</p>\
+  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+  //     choices: [32]
+  //   },
+  //   {
+  //     stimulus: ["<div class='center'><p>Using the up and down arrow keys, \
+  //       you will then adjust the size of the empty circle, so that it matches the \
+  //       size of your coin.</p>\
+  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+  //     choices: [32]
+  //   },
+  //   {
+  //     stimulus: ["<div class='center'><p>Take your time in doing so, as this measurement\
+  //       will be used throughout the study to make sure images are presented to \
+  //       you in their correct size.</p>\
+  //       <p>When you are done adjusting the circle size, press the space bar to \
+  //       continue to the main task.\
+  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+  //     choices: [32]
+  //   },
+  //   {
+  //     stimulus: ["<div class='center'><p>Please have a coin at hand.</p>\
+  //       <p>Press the space bar to start the calibration stage.</p></div>"],
+  //     choices: [32]
+  //   }
+  // ];
+  //
+  // var preCalibIns = {
+  //   type: 'html-keyboard-response',
+  //   timeline: preCalibInsText,
+  //   timing_post_trial: 400
+  // };
 
   /** 2-------- coin calibration**/
 
   /*** Screen calibration size ***/
   // Define global variables for this calibration
-  var coins = ['Penny', 'Nickel', 'Dime', 'Quarter'];
-  var sizes = [19.05, 21.209, 17.907, 24.257]; // Coin sizes in mm
-  var whichCoin = '';
-  var coinInd = NaN;
-
-  // Define choose coin trial
-  var chooseCoin = {
-    type: 'html-button-response',
-    stimulus: 'Using the mouse, select the coin you would like to use:',
-    choices: coins,
-    button_html: ['<div class="coin"><input type="image" src="/static/images/Penny.png" width="100" name="penny"></input><label for="penny" class="coin_label">Penny</label></div>',
-      '<div class="coin"><input type="image" src="/static/images/Nickel.png" width="111" name="nickel"></input><label for="nickel" class="coin_label">Nickel</label></div>',
-      '<div class="coin"><input type="image" src="/static/images/Dime.png" width="94" name="dime"></input><label for="dime" class="coin_label">Dime</label></div>',
-      '<div class="coin"><input type="image" src="/static/images/Quarter.png" width="127" name="quarter"></input><label for="quarter" class="coin_label">Quarter</label></div>'
-    ],
-    on_finish: function(data) {
-      whichCoin = coins[data.button_pressed];
-      coinInd = data.button_pressed;
-    },
-    timing_post_trial: 200
-  };
-
-  // Define single iteration of coin size calibration
-  var calibrate_trial = {
-    type: 'html-keyboard-response',
-    prompt: ['<p>Place your coin within the empty circle, touching the bottom line.<br>\
-    Adjust the circle size with the up and down arrow keys until it fits your coin.</p>\
-    <p align="center"><i>Press the space bar when you are done.</i></p>\
-    <p align="center"><i>Press the r key to change a coin type.</i></p>'],
-    stimulus: function() {
-      var coinSize = unitSize * sizes[coinInd];
-      return x = '<svg style="block: inline" width="800" height="300">\
-    <circle cx="200" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
-        '" stroke="black" stroke-width="2" fill="grey" />\
-    <line x1="0" y1="250" x2="1000" y2="250" style="stroke:black;stroke-width:2" />\
-    <image x="' + (600 - coinSize / 2) + '" y="' + (250 - coinSize) + '" width="' + (coinSize) +
-        '" height="' + (coinSize) + '" style:"block: inline" xlink:href="/static/images/' +
-        whichCoin + '.png"></image>\
-      <circle cx="600" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
-        '" stroke="black" stroke-width="2" fill-opacity="0" />\
-  </svg>';
-    },
-    choices: [38, 40, 32, 82],
-    timing_post_trial: 0
-  }
-
-  // Define loop of coin size calibration
-  var adjustCoin = {
-    timeline: [calibrate_trial],
-    loop_function: function() {
-      switch (jsPsych.data.get().last(1).select('key_press').values[0]) {
-        case 38:
-          // Normalize step size to size of the penny.
-          unitSize += (.2 / (sizes[coinInd] / sizes[0]));
-          return true;
-          break;
-        case 40:
-          unitSize -= (.2 / (sizes[coinInd] / sizes[0]));
-          return true;
-          break;
-        default:
-          return false;
-      }
-    }
-  }
-
-  var makeSure = {
-    type: 'html-keyboard-response',
-    prompt: ['<p style="line-height: 56px"><b>Are you sure the circle is as close as can be around your coin?</b></p>\
-    <p align="center"><i>Press the space bar if you are sure.</i></p>\
-    <p align="center"><i>Press the r key to start again.</i></p>'],
-    stimulus: function() {
-      var coinSize = unitSize * sizes[coinInd];
-      return x = '<svg style="block: inline" width="800" height="300">\
-    <circle cx="200" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
-        '" stroke="red" stroke-width="2" fill="grey" />\
-    <line x1="0" y1="250" x2="1000" y2="250" style="stroke:red;stroke-width:2" />\
-    <image x="' + (600 - coinSize / 2) + '" y="' + (250 - coinSize) + '" width="' + (coinSize) +
-        '" height="' + (coinSize) + '" style:"block: inline" xlink:href="/static/images/' +
-        whichCoin + '.png"></image>\
-      <circle cx="600" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
-        '" stroke="red" stroke-width="2" fill-opacity="0" />\
-  </svg>';
-    },
-    choices: [32, 82],
-    timing_post_trial: 200
-  }
-
-  // Nest in another loop to allow returning and changing coin
-  var initialSizeCalib = {
-    timeline: [chooseCoin, adjustCoin],
-    loop_function: function() {
-      switch (jsPsych.data.get().last(1).select('key_press').values[0]) {
-        case 82:
-          return true;
-          break;
-        default:
-          return false;
-      }
-    }
-  };
-
-  var makeSureLoop = {
-    timeline: [initialSizeCalib, makeSure],
-    loop_function: function() {
-      switch (jsPsych.data.get().last(1).select('key_press').values[0]) {
-        case 82:
-          return true;
-          break;
-        default:
-          return false;
-      }
-    }
-  };
+  // var coins = ['Penny', 'Nickel', 'Dime', 'Quarter'];
+  // var sizes = [19.05, 21.209, 17.907, 24.257]; // Coin sizes in mm
+  // var whichCoin = '';
+  // var coinInd = NaN;
+  //
+  // // Define choose coin trial
+  // var chooseCoin = {
+  //   type: 'html-button-response',
+  //   stimulus: 'Using the mouse, select the coin you would like to use:',
+  //   choices: coins,
+  //   button_html: ['<div class="coin"><input type="image" src="/static/images/Penny.png" width="100" name="penny"></input><label for="penny" class="coin_label">Penny</label></div>',
+  //     '<div class="coin"><input type="image" src="/static/images/Nickel.png" width="111" name="nickel"></input><label for="nickel" class="coin_label">Nickel</label></div>',
+  //     '<div class="coin"><input type="image" src="/static/images/Dime.png" width="94" name="dime"></input><label for="dime" class="coin_label">Dime</label></div>',
+  //     '<div class="coin"><input type="image" src="/static/images/Quarter.png" width="127" name="quarter"></input><label for="quarter" class="coin_label">Quarter</label></div>'
+  //   ],
+  //   on_finish: function(data) {
+  //     whichCoin = coins[data.button_pressed];
+  //     coinInd = data.button_pressed;
+  //   },
+  //   timing_post_trial: 200
+  // };
+  //
+  // // Define single iteration of coin size calibration
+  // var calibrate_trial = {
+  //   type: 'html-keyboard-response',
+  //   prompt: ['<p>Place your coin within the empty circle, touching the bottom line.<br>\
+  //   Adjust the circle size with the up and down arrow keys until it fits your coin.</p>\
+  //   <p align="center"><i>Press the space bar when you are done.</i></p>\
+  //   <p align="center"><i>Press the r key to change a coin type.</i></p>'],
+  //   stimulus: function() {
+  //     var coinSize = unitSize * sizes[coinInd];
+  //     return x = '<svg style="block: inline" width="800" height="300">\
+  //   <circle cx="200" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
+  //       '" stroke="black" stroke-width="2" fill="grey" />\
+  //   <line x1="0" y1="250" x2="1000" y2="250" style="stroke:black;stroke-width:2" />\
+  //   <image x="' + (600 - coinSize / 2) + '" y="' + (250 - coinSize) + '" width="' + (coinSize) +
+  //       '" height="' + (coinSize) + '" style:"block: inline" xlink:href="/static/images/' +
+  //       whichCoin + '.png"></image>\
+  //     <circle cx="600" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
+  //       '" stroke="black" stroke-width="2" fill-opacity="0" />\
+  // </svg>';
+  //   },
+  //   choices: [38, 40, 32, 82],
+  //   timing_post_trial: 0
+  // }
+  //
+  // // Define loop of coin size calibration
+  // var adjustCoin = {
+  //   timeline: [calibrate_trial],
+  //   loop_function: function() {
+  //     switch (jsPsych.data.get().last(1).select('key_press').values[0]) {
+  //       case 38:
+  //         // Normalize step size to size of the penny.
+  //         unitSize += (.2 / (sizes[coinInd] / sizes[0]));
+  //         return true;
+  //         break;
+  //       case 40:
+  //         unitSize -= (.2 / (sizes[coinInd] / sizes[0]));
+  //         return true;
+  //         break;
+  //       default:
+  //         return false;
+  //     }
+  //   }
+  // }
+  //
+  // var makeSure = {
+  //   type: 'html-keyboard-response',
+  //   prompt: ['<p style="line-height: 56px"><b>Are you sure the circle is as close as can be around your coin?</b></p>\
+  //   <p align="center"><i>Press the space bar if you are sure.</i></p>\
+  //   <p align="center"><i>Press the r key to start again.</i></p>'],
+  //   stimulus: function() {
+  //     var coinSize = unitSize * sizes[coinInd];
+  //     return x = '<svg style="block: inline" width="800" height="300">\
+  //   <circle cx="200" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
+  //       '" stroke="red" stroke-width="2" fill="grey" />\
+  //   <line x1="0" y1="250" x2="1000" y2="250" style="stroke:red;stroke-width:2" />\
+  //   <image x="' + (600 - coinSize / 2) + '" y="' + (250 - coinSize) + '" width="' + (coinSize) +
+  //       '" height="' + (coinSize) + '" style:"block: inline" xlink:href="/static/images/' +
+  //       whichCoin + '.png"></image>\
+  //     <circle cx="600" cy="' + (250 - coinSize / 2) + '" r="' + coinSize / 2 +
+  //       '" stroke="red" stroke-width="2" fill-opacity="0" />\
+  // </svg>';
+  //   },
+  //   choices: [32, 82],
+  //   timing_post_trial: 200
+  // }
+  //
+  // // Nest in another loop to allow returning and changing coin
+  // var initialSizeCalib = {
+  //   timeline: [chooseCoin, adjustCoin],
+  //   loop_function: function() {
+  //     switch (jsPsych.data.get().last(1).select('key_press').values[0]) {
+  //       case 82:
+  //         return true;
+  //         break;
+  //       default:
+  //         return false;
+  //     }
+  //   }
+  // };
+  //
+  // var makeSureLoop = {
+  //   timeline: [initialSizeCalib, makeSure],
+  //   loop_function: function() {
+  //     switch (jsPsych.data.get().last(1).select('key_press').values[0]) {
+  //       case 82:
+  //         return true;
+  //         break;
+  //       default:
+  //         return false;
+  //     }
+  //   }
+  // };
 
   // Make main block
   var breakMsg = {
@@ -456,58 +456,130 @@ var post_load = function() {
   };
   // var lastWarned = -experiment_performance_trials; //It's up for debugging
 
-  //
-  // /** 3------- PRACTICE INSTRUCTIONS ***/
-  //
-  // var instruction_text = [{
-  //     stimulus: ["<p>We will now continue to the main task.</p>\
-  //     <p align='center'><i>Press the space bar to continue.</i></p>"],
-  //     choices: [32]
-  //   },
-  //   {
-  //     stimulus: ["<div class = 'center'><p>You will be presented with rapidly \
-  //       changing patterns of rectangles. Through these rectangles faces will appear. Your task will be to indicate the location of \
-  //       the faces, or any part of them, as soon as they appear.</p>\
-  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-  //     choices: [32]
-  //   },
-  //   {
-  //     stimulus: ["<div class = 'center'><p>If a face appeared in the right half \
-  //       of the screen, press the right key. If a face appeared in the left half \
-  //       of the screen, press the left key.</p>\
-  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-  //     choices: [32]
-  //   },
-  //   {
-  //     stimulus: ["<div class = 'center'><p>Please perform this task as accurately \
-  //       and quickly as you can.</p>\
-  //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
-  //     choices: [32]
-  //   },
-  //   {
-  //     stimulus: ["<div class = 'center'><p>During the task, please focus your gaze at\
-  //        the plus sign in the middle.<br>Even though the faces appear to the left\
-  //         and right of the plus sign, it is important that you look at the plus \
-  //         sign at all times.</p>\
-  //         <p align='center'></i>Press the space bar to continue.</i></p></div>"],
-  //     choices: [32]
-  //   },
-  //   {
-  //     stimulus: ["<div class='center'>\
-  //       <img src='/static/images/keys.jpg'></img>\
-  //       <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
-  //       and press either one of these keys to continue.</p></div>"],
-  //     choices: [68, 75]
-  //   }
-  // ];
-  //
-  // var instructions = {
-  //   type: 'html-keyboard-response',
-  //   timeline: instruction_text,
-  //   timing_post_trial: 200
-  // };
-  //
-  //
+  var pre_first_train = [{
+      stimulus: ["<div class='center'>Welcome to the study!<br> \
+      <p>Your participation will help us investigate human precision and reaction-times in dynamic environments.</p>\
+      <p>Please read the instructions carefully.</p>\
+      <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class='center'><p>In the first part of this study, \
+      you will be presented with images depciting different objects and scenes.\
+       Your task will be to respond to each picture according to whether it \
+       depicts an animate being, or only inanimate objects.</p>\
+      <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class='center'><p>If the picture depcits an animate being \
+      such as a person or an animal, press the right key. If the picture depcits \
+      only inanimate objects, press the left key.</p>\
+      <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class='center'><p><b><u>Example 1:</b></u> if presented with the image \
+      below, you should press the right key, because the image depcits an animate object.</p>\
+      <img src='/static/images/ex1.jpg'></img>\
+      <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class='center'><p><b><u>Example 2:</b></u> if presented with the image \
+      below, you should press the left key, because the image depcits \
+      only inanimate objects.</p>\
+      <img src='/static/images/ex2.jpg'></img>\
+      <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class = 'center'><p>Please perform this task as accurately \
+          and quickly as you can.</p>\
+          <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class = 'center'><p>You will now start with a short practice\
+       block.</p>\
+          <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class='center'>\
+          <img src='/static/images/keys.jpg'></img>\
+          <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
+          and press either one of these keys to begin the practice.</p></div>"],
+      choices: [68, 75]
+    }
+  ]
+
+  var pre_second_train = [{
+      stimulus: ["<div class = 'center'><p>You have completed the first \
+      practice block</p>\
+          <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class = 'center'><p>In the next part, some of the images \
+    are going to appear scrambled.</p>\
+    <p>Your task remains exactly the same. Respond to each image according to \
+    whether it depicts an animate object, or only inanimate objects.</p>\
+    <p>If the image appears too scrambled, do your best to guess whether it \
+    depicts an animate object or not.</p>\
+        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class = 'center'><p>While your task remains the same \
+      as before, during this part you will no recieve feedback on your responses.</p>\
+        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class = 'center'><p>Please perform this task as accurately \
+        and quickly as you can.</p>\
+        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class = 'center'><p>You will now proceeed with a short practice\
+     block.</p>\
+        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class='center'>\
+        <img src='/static/images/keys.jpg'></img>\
+        <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
+        and press either one of these keys to begin the practice.</p></div>"],
+      choices: [68, 75]
+    }
+  ]
+
+  var pre_main_block = [{
+      stimulus: ["<div class = 'center'><p>You have completed the second \
+      practice block</p>\
+          <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class = 'center'><p>You will now continue with the \
+      same task.</p>\
+      <p>You will have nine short breaks during this part.</p>\
+        <p align='center'><i>Press the space bar to continue.</i></p></div>"],
+      choices: [32]
+    },
+    {
+      stimulus: ["<div class='center'>\
+          <img src='/static/images/keys.jpg'></img>\
+          <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
+          and press either one of these keys to begin.</p></div>"],
+      choices: [68, 75]
+    }
+  ]
+
+
   // /** 4----- PRACTICE BLOCK  **/
   //
   // /*** bRMS practice block ***/
@@ -982,9 +1054,9 @@ var post_load = function() {
   // Put it all together
   var experiment_blocks = [];
   // experiment_blocks.push(fullscreen);
-  // experiment_blocks.push(preCalibIns)
-  // experiment_blocks.push(makeSureLoop);
-  // experiment_blocks.push(instructions);
+  experiment_blocks.push(pre_first_train);
+  experiment_blocks.push(pre_second_train);
+  experiment_blocks.push(pre_main_block);
   // experiment_blocks.push(secChanceLoop);
   // experiment_blocks.push(mainBlockIns);
   experiment_blocks.push(main_block);
