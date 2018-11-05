@@ -8,6 +8,7 @@ var ITI = 1000,
   breakEvery = 152,
   clar_range = [0.2, 0.8],
   clar_nsteps = 10,
+  clar_nsteps_train = 8,
   n_rep = 2,
   n_new = 1, // sum to Ntotal
   n_repeat_steps = 3,
@@ -627,7 +628,7 @@ var post_load = function() {
     <p>Press either the 'D' or 'K' keys to repeat it.</p></div>"],
         choices: [68, 75]
       }],
-      conditional_function: function(){
+      conditional_function: function() {
         return jsPsych.data.get().last(1).select('category').values.length
       }
     },
@@ -652,7 +653,7 @@ var post_load = function() {
       on_finish: function() {
         // psiturk.saveData({
         //   success: function() {
-            jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
+        jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
         //   }
         // });
       }
@@ -665,7 +666,9 @@ var post_load = function() {
   var secChanceLoop = {
     timeline: [performanceMSG_practice, train_1, stop_practice_loop],
     loop_function: function() {
-      if (jsPsych.data.get().filter({category: 'task'}).last(train_1_n).select('acc').mean() < train_1_n_performance_thresh) {
+      if (jsPsych.data.get().filter({
+          category: 'task'
+        }).last(train_1_n).select('acc').mean() < train_1_n_performance_thresh) {
         jsPsych.data.addProperties({
           train_repeats: jsPsych.data.get().last(1).select('train_repeats').values[0] + 1
         });
@@ -696,7 +699,7 @@ var post_load = function() {
     },
     {
       stimulus: ["<div class = 'inst'><p>While your task remains the same \
-      as before, during this part you will no recieve feedback on your responses.</p>\
+      as before, during this part you will not recieve feedback on your responses.</p>\
       <br> <br>\
         <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
@@ -730,6 +733,72 @@ var post_load = function() {
     timeline: pre_second_train_text
   };
 
+  // Set of unique clar levels for training
+  var clar_levels_train = [];
+  for (i = 0; i != clar_nsteps_train; i++) {
+    clar_levels_train.push(clar_range[0] + i *
+      (clar_range[1] - clar_range[0]) / (clar_nsteps_train - 1))
+  }
+
+  // Assign clar_level per image
+  for (i = train_1_n; i != train_1_n + train_2_n; i++) {
+    if (i % clar_nsteps_train == 0) {
+      clar_levels_train = jsPsych.randomization.shuffle(clar_levels_train);
+    }
+    train_images[i].clar_level = clar_levels_train[i % clar_nsteps_train];
+  }
+
+  // Define train 2 block
+  var train_2 = {
+    timeline: [
+      fixation_trial,
+      {
+        type: 'html-keyboard-response',
+        choices: ['d', 'k'],
+        trial_duration: train_1_rt_crit,
+        stimulus: function() {
+          var name = jsPsych.timelineVariable('name', true),
+            cl = jsPsych.timelineVariable('clar_level', true);
+          return '<img class = "stimulus_img" src="/static/images/' +
+            name + '" width = "517" height = "388"></img>\
+            <img class = "mask_img" src="/static/images/' +
+            name.substr(0, name.length - 4) +
+            '_s.jpg" style="opacity: ' +
+            (1 - cl) + '" width = "517" height = "388"></img>'
+        },
+        data: {
+          name: jsPsych.timelineVariable('name'),
+          animate: jsPsych.timelineVariable('animate'),
+          clar_level: jsPsych.timelineVariable('clar_level'),
+          category: 'task'
+        },
+        on_finish: function(data) {
+          if (data.key_press == 75 && data.animate ||
+            data.key_press == 68 && !data.animate) {
+            data.acc = 1;
+          } else {
+            data.acc = 0;
+          }
+        }
+      },
+      {
+        timeline: [{
+          type: 'html-keyboard-response',
+          stimulus: "<p class='feedback'>Too slow!</p>",
+          choices: jsPsych.NO_KEYS,
+          trial_duration: 1000,
+          post_trial_gap: 500,
+          data: {
+            category: 'feedback'
+          }
+        }],
+        conditional_function: function() {
+          return jsPsych.data.get().last(1).values()[0].key_press == null
+        }
+      }
+    ],
+    timeline_variables: jsPsych.randomization.shuffle(train_images.slice(train_1_n))
+  }
 
   var pre_main_block_text = [{
       stimulus: ["<div class = 'inst'><p>You have completed the second \
@@ -763,339 +832,6 @@ var post_load = function() {
 
 
 
-  // /** 4----- PRACTICE BLOCK  **/
-  //
-  // /*** bRMS practice block ***/
-  // //Define stimuli pool for experiment
-  // var all_images = [];
-  // for (i = 0; i < total_num_faces; i++) { //creating an array of all possible images names    *yuval
-  //   all_images.push('../static/images/f42887_e_' + ('000' + i).substr(-3, 3) + '.jpg');
-  // }
-  // all_images = jsPsych.randomization.shuffle(all_images); //after shuffling, the chosen images will be taken from this 'all_images' array. *yuval
-  //
-  //
-  //
-  // // Define stimuli for practice
-  // var pre_practice_stimuli = all_images;
-  // pre_practice_stimuli = pre_practice_stimuli.slice(0, train_repetitions); //take first images for practice (not sure if 'pre' array neccesary but works well)  *yuval
-  // var practice_stimuli = [];
-  //
-  // for (j = 0; j < 2; j++) {
-  //   for (i = 0; i < train_repetitions; i++) {
-  //     practice_stimuli.push({
-  //       stimulus: pre_practice_stimuli[i],
-  //       data: {
-  //         stimulus: pre_practice_stimuli[i],
-  //         stimulus_type: 'normal',
-  //         timing_response: trialLength,
-  //         fade_out_time: fade_out_time,
-  //         fade_in_time: fade_in_time,
-  //         fade_out_length: fade_out_length,
-  //         stimulus_alpha: stimAlphas[j]
-  //       },
-  //       timing_response: trialLength,
-  //       fade_out_time: fade_out_time,
-  //       fade_in_time: fade_in_time,
-  //       fade_out_length: fade_out_length,
-  //       stimulus_alpha: stimAlphas[j]
-  //     });
-  //   }
-  // }
-  //
-  // practice_stimuli = jsPsych.randomization.shuffle(practice_stimuli);
-  //
-  // all_images = all_images.slice(train_repetitions, train_repetitions + exp_num_faces); //getting rid of images used in practice
-  //
-  //
-  // /* define block */
-  // var bRMS_practice = {
-  //   type: "bRMS",
-  //   timeline: practice_stimuli,
-  //   timing_post_trial: 100,
-  //   visUnit: function() {
-  //     return unitSize
-  //   },
-  //   within_ITI: ITI - 100
-  // };
-  //
-  // var performanceMSG_practice = {
-  //     type: 'html-keyboard-response',
-  //     stimulus: ["<div class = 'inst'>\
-  //   <p>You pressed the wrong key too many times during the practice block.</p>\
-  //   <p>Press either the 'D' or 'K' keys to repeat it.</p></div>"],
-  //     choices: [68, 75],
-  //     on_start: function(trial) {
-  //       if (jsPsych.data.get().last(1).select('trial_type').values != 'bRMS') {
-  //         trial.stimulus = '';
-  //         trial.choices = jsPsych.NO_KEYS;
-  //         trial.trial_duration = 0;
-  //       }
-  //     }
-  //   },
-  //   stop_practice_loop = {
-  //     type: 'html-keyboard-response',
-  //     conditional_function: function() {
-  //       if (jsPsych.data.get().last(1).select('train_repeats').values[0] > training_allowed_repeat) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     },
-  //     timeline: [{
-  //       stimulus: "<div class = 'inst'>\
-  //   <p>It seems that you are not performing the task as instructed.</p>\
-  //   <p>Please return this HIT.</p>\
-  //   <p>If you feel that this is a mistake, please email \
-  //   yaniv.abir+mturk@mail.huji.ac.il</p>\
-  //   <p>Press the space bar to continue.</p></div>"
-  //     }],
-  //     choices: [32],
-  //
-  //     //** needed eventualy **//
-  //     on_finish: function() {
-  //       psiturk.saveData({
-  //         success: function() {
-  //           jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
-  //         }
-  //       });
-  //     },
-  //   }
-  //
-  //
-  //
-  // jsPsych.data.addProperties({
-  //   train_repeats: 1
-  // });
-  //
-  // var secChanceLoop = {
-  //   timeline: [performanceMSG_practice, bRMS_practice, stop_practice_loop],
-  //   loop_function: function() {
-  //     if (jsPsych.data.get().last(train_repetitions).select('acc').mean() < train_performance_thresh) {
-  //       jsPsych.data.addProperties({
-  //         train_repeats: jsPsych.data.get().last(1).select('train_repeats').values[0] + 1
-  //       });
-  //       return true
-  //     } else {
-  //       return false
-  //     }
-  //   }
-  // };
-  //
-  //
-  // //** 5------main block instructions **//
-  //
-  // var mainBlockText = [{
-  //     stimulus: ["<div class = 'inst'><p>You have completed the practice block.</p>\
-  //   <p>You will now continue with the same task. The task may now be more \
-  //   difficult.\
-  //   You will have 7 short breaks. </p>\
-  //     <p>Press either the 'D' or the 'K' keys to continue.</p></div>"],
-  //     choices: [68, 75]
-  //   },
-  //   {
-  //     stimulus: ["<div class = 'inst'><p>During the task, please focus your gaze at\
-  //    the plus sign in the middle.<br>Even though the faces appear to the left\
-  //     and right of the plus sign, it is important that you look at the plus \
-  //     sign at all times.</p>\
-  //     <p>Press either the 'D' or the 'K' keys to continue.</p></div>"],
-  //     choices: [68, 75]
-  //   }
-  // ]
-  //
-  // var mainBlockIns = {
-  //   type: 'html-keyboard-response',
-  //   timeline: mainBlockText,
-  //   timing_post_trial: 200
-  // }
-  //
-  // //** 6------------brms main block**//
-  //
-  // // Define stimuli for bRMS
-  //
-  //
-  // var used_images = all_images.slice(0, exp_num_faces); //creating 'used_images[]', holding all and only faces going to be used in the main block. *yuval
-  // var stimuli = [];
-  //
-  //
-  // for (i = 0; i < repetitions; i++) { // Create a list of trials, repeating the experiment block x amount of times. *yaniv
-  //   var this_rep = [];
-  //   for (j = 0; j < 2; j++) {
-  //     for (ii = 0; ii <= exp_num_faces - 1; ii++) {
-  //       this_rep.push({
-  //         type: "bRMS",
-  //         stimulus: used_images[ii],
-  //         data: {
-  //           stimulus: used_images[ii],
-  //           timing_response: trialLength,
-  //           stimulus_alpha: stimAlphas[j],
-  //           timing_post_trial: 100,
-  //           within_ITI: ITI - 100,
-  //           fade_in_time: fade_in_time,
-  //           fade_out_time: fade_out_time,
-  //           fade_out_length: fade_out_length,
-  //         },
-  //         stimulus_alpha: stimAlphas[j],
-  //         timing_post_trial: 100,
-  //         within_ITI: ITI - 100,
-  //         timing_response: trialLength,
-  //         fade_in_time: fade_in_time,
-  //         fade_out_time: fade_out_time,
-  //         fade_out_length: fade_out_length
-  //       });
-  //     }
-  //   }
-  //   stimuli = stimuli.concat(jsPsych.randomization.shuffle(this_rep));
-  // }
-  //
-  // for (i = 0; i < stimuli.length; i++) {
-  //   stimuli[i]['data']['trial'] = i + 1;
-  // }
-  // /* Add breaks */
-  // var breakMsg = {
-  //   type: "html-keyboard-response",
-  //   stimulus: ["<div class = 'inst'><p>This is a break.</p>\
-  //   <p>Press the space bar to continue.</p>"],
-  //   choices: [32],
-  //   timing_post_trial: 1600
-  // }
-  //
-  // /* Make sure participants are behaving */
-  // var behave = {
-  //     type: "html-keyboard-response",
-  //     timeline: [{
-  //       stimulus: "<div class = 'inst'><p>It seems that you have pressed the wrong \
-  //   key many times recently.</p>\
-  //   <p>Please perform the task as accurately and as quickly as you can.</p>\
-  //   <p>Press the space bar to continue.</p>"
-  //     }],
-  //     choices: [32],
-  //     conditional_function: function() {
-  //       var trialType = jsPsych.currentTrial().type,
-  //         trialN = jsPsych.data.get().filter({
-  //           trial_type: "bRMS"
-  //         }).count();
-  //
-  //       if (trialType == 'bRMS' && // This isn't a break
-  //         jsPsych.currentTrial().data.trial > lastWarned + experiment_performance_trials && // unwarned
-  //         ((trialN >= experiment_performance_trials && // sufficient acc data
-  //             jsPsych.data.get().filter({
-  //               trial_type: "bRMS"
-  //             }).last(experiment_performance_trials).select('acc').mean() < experiment_performance_thresh) || // performance bad
-  //           (trialN >= experiment_RT_trials && // sufficient rt data
-  //             jsPsych.data.get().filter({
-  //               trial_type: "bRMS"
-  //             }).last(experiment_RT_trials).filterCustom(function(x) {
-  //               return x.rt < experiment_RT_threshold
-  //             }).count() >= experiment_RT_trial_threshold))) { // enough fast trials
-  //         lastWarned = jsPsych.currentTrial().data.trial;
-  //         //console.log("condition is true");
-  //         return true;
-  //       } else {
-  //         //console.log("condition is false");
-  //         return false;
-  //       }
-  //     }
-  //   },
-  //   lastWarned = -experiment_performance_trials;
-  //
-  // for (ii = breakEvery; ii < stimuli.length; ii += (breakEvery + 1)) {
-  //   stimuli.splice(ii, 0, breakMsg);
-  // };
-  //
-  //
-  // for (ii = 1; ii < (stimuli.length - 1); ii += 2) {
-  //   stimuli.splice(ii, 0, behave);
-  // }
-  //
-  //
-  // /* define block */
-  // var bRMS_block = {
-  //   timeline: stimuli,
-  //   visUnit: function() {
-  //     return unitSize
-  //   },
-  //   on_finish: function() {
-  //     var d = new Date();
-  //     if ((d.getTime() - exp_start_time) > time_limit) {
-  //       jsPsych.endCurrentTimeline();
-  //     }
-  //   }
-  // };
-  //
-  //
-  // //** Animation test ** //
-  // var test_animation = {
-  //     type: 'bRMS-test',
-  //     timeline: [{
-  //         stimulus: all_images[1],
-  //         prompt: "<p>Testing for the \
-  //       compatibility of your personal computer with this HIT.</p> \
-  //       <p>This will take approximately 15 seconds more.</p>"
-  //       },
-  //       {
-  //         stimulus: all_images[2],
-  //         prompt: "<p>Testing for the \
-  //       compatibility of your personal computer with this HIT.</p> \
-  //       <p>This will take approximately 10 seconds more.</p>"
-  //       },
-  //       {
-  //         stimulus: all_images[3],
-  //         prompt: "<p>Testing for the \
-  //       compatibility of your personal computer with this HIT.</p> \
-  //       <p>This will take approximately 5 seconds more.</p>"
-  //       }
-  //     ],
-  //     data: {
-  //       timing_response: 4,
-  //       stimulus_alpha: stimAlphas,
-  //       timing_post_trial: 100,
-  //       within_ITI: ITI - 100,
-  //       fade_in_time: fade_in_time,
-  //       fade_out_time: fade_out_time,
-  //       fade_out_length: fade_out_length
-  //     },
-  //     stimulus_alpha: stimAlphas,
-  //     timing_post_trial: 100,
-  //     within_ITI: ITI - 100,
-  //     timing_response: 4,
-  //     fade_in_time: fade_in_time,
-  //     fade_out_time: fade_out_time,
-  //     fade_out_length: fade_out_length,
-  //     visUnit: 4,
-  //     choices: ["none"]
-  //   },
-  //   poor_animation = {
-  //     type: 'html-keyboard-response',
-  //     conditional_function: function() {
-  //       if (jsPsych.data.get().last(3).select('sProblem').sum() > sProblemCrit ||
-  //         jsPsych.data.get().last(3).select('bProblem').sum() > bProblemCrit) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     },
-  //     timeline: [{
-  //       stimulus: "<div class = 'inst'>\
-  // <p>It seems that the animation is not presented correctly on your computer.</p>\
-  // <p>This may be due to old hardware, or too many open applications.</p>\
-  // <p><b>Please return this HIT</b>.</p>\
-  // <p>We'll be glad to see you participating in future HITs.</p>\
-  // <p>For any questions, please email \
-  // yaniv.abir+mturk@mail.huji.ac.il</p>\
-  // <p>Press the space bar to continue.</p></div>"
-  //     }],
-  //     choices: [32],
-  //     //** needed eventualy **//
-  //     on_finish: function() {
-  //       psiturk.saveData({
-  //         success: function() {
-  //           jsPsych.endExperiment('The experiment has been aborted. <b>Please return HIT.</b>');
-  //         }
-  //       });
-  //     }
-  //   }
-  //
-  //
   // //** 7---------Debrief **//
   //
   // var debrief = [{
@@ -1237,9 +973,10 @@ var post_load = function() {
   // Put it all together
   var experiment_blocks = [];
   // experiment_blocks.push(fullscreen);
-  experiment_blocks.push(pre_first_train);
-  experiment_blocks.push(secChanceLoop);
-  experiment_blocks.push(pre_second_train);
+  // experiment_blocks.push(pre_first_train);
+  // experiment_blocks.push(secChanceLoop);
+  // experiment_blocks.push(pre_second_train);
+  experiment_blocks.push(train_2);
   experiment_blocks.push(pre_main_block);
   // experiment_blocks.push(secChanceLoop);
   // experiment_blocks.push(mainBlockIns);
