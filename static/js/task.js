@@ -182,7 +182,12 @@ var post_load = function() {
     type: 'fullscreen',
     fullscreen_mode: true,
     message: '<p>This study runs in fullscreen. To switch to full screen mode \
-    and start the HIT, press the button below.</p>'
+    and start the HIT, press the button below.</p>',
+    on_finish: function(){
+      // Hide mouse
+      var stylesheet = document.styleSheets[0];
+      stylesheet.insertRule("* {cursor: none;}", stylesheet.cssRules.length);
+    }
   }
 
 
@@ -855,7 +860,12 @@ var post_load = function() {
           rows: 1,
           value: ''
         }
-      ]
+      ],
+      on_load: function() {
+        // Return mouse
+        var stylesheet = document.styleSheets[0];
+        stylesheet.deleteRule(stylesheet.cssRules.length - 1);
+      }
     }, {
       type: "survey-multi-choice",
       questions: [{
@@ -908,8 +918,8 @@ var post_load = function() {
 
   // Put it all together
   var experiment_blocks = [];
-  // experiment_blocks.push(fullscreen);
-  // experiment_blocks.push(pre_first_train);
+  experiment_blocks.push(fullscreen);
+  experiment_blocks.push(pre_first_train);
   // experiment_blocks.push(secChanceLoop);
   // experiment_blocks.push(pre_second_train);
   // experiment_blocks.push(train_2);
