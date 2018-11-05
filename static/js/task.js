@@ -895,7 +895,7 @@ var post_load = function() {
     },
     {
       type: "html-keyboard-response",
-      stimulus: '<div class="center">Thank you for participating in this study!<p>\
+      stimulus: '<div class="inst">Thank you for participating in this study!<p>\
       In this study we were interested in examining reaction-times and \
       precision in a dynamic environment.</p>\
       <p>Once you press the space bar, your results will be uploaded to the \
@@ -908,13 +908,13 @@ var post_load = function() {
 
   // Put it all together
   var experiment_blocks = [];
-  experiment_blocks.push(fullscreen);
-  experiment_blocks.push(pre_first_train);
-  experiment_blocks.push(secChanceLoop);
-  experiment_blocks.push(pre_second_train);
-  experiment_blocks.push(train_2);
-  experiment_blocks.push(pre_main_block);
-  experiment_blocks.push(main_block);
+  // experiment_blocks.push(fullscreen);
+  // experiment_blocks.push(pre_first_train);
+  // experiment_blocks.push(secChanceLoop);
+  // experiment_blocks.push(pre_second_train);
+  // experiment_blocks.push(train_2);
+  // experiment_blocks.push(pre_main_block);
+  // experiment_blocks.push(main_block);
   experiment_blocks = experiment_blocks.concat(debrief);
 
   // Save data to file functions
