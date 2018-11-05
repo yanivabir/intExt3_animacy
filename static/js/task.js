@@ -18,6 +18,7 @@ var ITI = 1000,
   experiment_RT_threshold = 300;
 
 var exp_images;
+var train_images;
 var trial_plan;
 var lags = [];
 var main_block;
@@ -29,7 +30,15 @@ Papa.parse("../static/sampImagesInfo.csv", {
   dynamicTyping: true,
   complete: function(results) {
     exp_images = results.data; //.slice(0, results.data.length - 1);
-    post_load();
+    Papa.parse("../static/train_images.csv", {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      complete: function(results){
+        train_images = results.data;
+        post_load();
+      }
+    })
   }
 });
 
