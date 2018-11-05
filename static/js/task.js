@@ -956,7 +956,6 @@ var post_load = function() {
   var d = new Date();
   jsPsych.init({
     timeline: experiment_blocks,
-    fullscreen: true,
     on_finish: function(data) {
       saveData(jsPsych.data.get().json(), 'test_data.txt')
       // psiturk.recordUnstructuredData('jsPsych_trial_data',
