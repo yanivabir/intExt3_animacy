@@ -12,6 +12,13 @@ html {
   background-color: grey;
 }
 
+.inst {
+  text-align: left;
+  width: 70%;
+  margin: 0 auto;
+  min-width: 600px;
+}
+
 #fixation{
   font-size: 50px;
   font-weight: 600;

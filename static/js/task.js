@@ -173,14 +173,14 @@ var post_load = function() {
 
   /*** Instructions ***/
   // var preCalibInsText = [{
-  //     stimulus: ["<div class='center'>Welcome to the study!<br> \
+  //     stimulus: ["<div class = 'inst'>Welcome to the study!<br> \
   //     <p>Your participation will help us investigate human precision and reaction-times in dynamic environments.</p>\
   //     <p>Please read the instructions carefully.</p>\
   //     <p align='center'><i>Press the space bar to continue.</i></p></div>"],
   //     choices: [32]
   //   },
   //   {
-  //     stimulus: ["<div class='center'><p>We will begin by calibrating the experiment \
+  //     stimulus: ["<div class = 'inst'><p>We will begin by calibrating the experiment \
   //       for the size of your screen.</p>\
   //       <p>After this short calibration, we will continue to the main task for \
   //       this study.</p>\
@@ -188,13 +188,13 @@ var post_load = function() {
   //     choices: [32]
   //   },
   //   {
-  //     stimulus: ["<div class='center'><p>For the calibration stage, you will need a coin.</p>\
+  //     stimulus: ["<div class = 'inst'><p>For the calibration stage, you will need a coin.</p>\
   //       <p>Any US coin will do.</p>\
   //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
   //     choices: [32]
   //   },
   //   {
-  //     stimulus: ["<div class='center'><img src='/static/images/coin_demo.jpg' height='400'></img>\
+  //     stimulus: ["<div class = 'inst'><img src='/static/images/coin_demo.jpg' height='400'></img>\
   //       <p>You will be asked to position the coin\
   //       as shown in the picture. You will place it against your screen,\
   //       within an empty circle presented to you.</p>\
@@ -202,14 +202,14 @@ var post_load = function() {
   //     choices: [32]
   //   },
   //   {
-  //     stimulus: ["<div class='center'><p>Using the up and down arrow keys, \
+  //     stimulus: ["<div class = 'inst'><p>Using the up and down arrow keys, \
   //       you will then adjust the size of the empty circle, so that it matches the \
   //       size of your coin.</p>\
   //       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
   //     choices: [32]
   //   },
   //   {
-  //     stimulus: ["<div class='center'><p>Take your time in doing so, as this measurement\
+  //     stimulus: ["<div class = 'inst'><p>Take your time in doing so, as this measurement\
   //       will be used throughout the study to make sure images are presented to \
   //       you in their correct size.</p>\
   //       <p>When you are done adjusting the circle size, press the space bar to \
@@ -218,7 +218,7 @@ var post_load = function() {
   //     choices: [32]
   //   },
   //   {
-  //     stimulus: ["<div class='center'><p>Please have a coin at hand.</p>\
+  //     stimulus: ["<div class = 'inst'><p>Please have a coin at hand.</p>\
   //       <p>Press the space bar to start the calibration stage.</p></div>"],
   //     choices: [32]
   //   }
@@ -352,7 +352,7 @@ var post_load = function() {
   // Make main block
   var breakMsg = {
     type: "html-keyboard-response",
-    stimulus: ["<div class = 'center'><p>This is a break.</p>\
+    stimulus: ["<div class = 'inst'><p>This is a break.</p>\
     <p>Press the space bar to continue.</p>"],
     choices: [32],
     post_trial_gap: 1600
@@ -373,11 +373,11 @@ var post_load = function() {
           var name = jsPsych.timelineVariable('name', true),
             cl = jsPsych.timelineVariable('clar_level', true);
           return '<img class = "stimulus_img" src="/static/images/' +
-            name + '" width = "400" height = "300"></img>\
+            name + '" width = "517" height = "388"></img>\
             <img class = "mask_img" src="/static/images/' +
             name.substr(0, name.length - 4) +
             '_s.jpg" style="opacity: ' +
-            (1 - cl) + '" width = "400" height = "300"></img>'
+            (1 - cl) + '" width = "517" height = "388"></img>'
         },
         data: {
           memorability: jsPsych.timelineVariable('Memorability'),
@@ -412,7 +412,7 @@ var post_load = function() {
       {
         timeline: [{
           type: 'html-keyboard-response',
-          stimulus: "<div class = 'center'><p>It seems that you have pressed the wrong \
+          stimulus: "<div class = 'inst'><p>It seems that you have pressed the wrong \
         key many times recently.</p>\
         <p>Please perform the task as accurately and as quickly as you can.</p>\
         <p>Press the space bar to continue.</p>",
@@ -456,128 +456,162 @@ var post_load = function() {
   };
   // var lastWarned = -experiment_performance_trials; //It's up for debugging
 
-  var pre_first_train = [{
-      stimulus: ["<div class='center'>Welcome to the study!<br> \
+  var pre_first_train_text = [{
+      stimulus: ["<div class = 'inst'>Welcome to the study!<br> \
       <p>Your participation will help us investigate human precision and reaction-times in dynamic environments.</p>\
       <p>Please read the instructions carefully.</p>\
+      <br> <br>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class='center'><p>In the first part of this study, \
+      stimulus: ["<div class = 'inst'><p>In the first part of this study, \
       you will be presented with images depciting different objects and scenes.\
        Your task will be to respond to each picture according to whether it \
        depicts an animate being, or only inanimate objects.</p>\
+       <br> <br>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class='center'><p>If the picture depcits an animate being \
+      stimulus: ["<div class = 'inst'><p>If the picture depcits an animate being \
       such as a person or an animal, press the right key. If the picture depcits \
       only inanimate objects, press the left key.</p>\
+      <br> <br>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class='center'><p><b><u>Example 1:</b></u> if presented with the image \
+      stimulus: ["<div class = 'inst'><p><b><u>Example 1:</b></u> if presented with the image \
       below, you should press the right key, because the image depcits an animate object.</p>\
       <img src='/static/images/ex1.jpg'></img>\
+      <br> <br>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class='center'><p><b><u>Example 2:</b></u> if presented with the image \
+      stimulus: ["<div class = 'inst'><p><b><u>Example 2:</b></u> if presented with the image \
       below, you should press the left key, because the image depcits \
       only inanimate objects.</p>\
       <img src='/static/images/ex2.jpg'></img>\
+      <br> <br>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class = 'center'><p>Please perform this task as accurately \
+      stimulus: ["<div class = 'inst'><p>Please perform this task as accurately \
           and quickly as you can.</p>\
+          <br> <br>\
           <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class = 'center'><p>You will now start with a short practice\
+      stimulus: ["<div class = 'inst'><p>You will now start with a short practice\
        block.</p>\
+       <br> <br>\
           <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class='center'>\
+      stimulus: ["<div class = 'inst'>\
           <img src='/static/images/keys.jpg'></img>\
           <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
           and press either one of these keys to begin the practice.</p></div>"],
       choices: [68, 75]
     }
-  ]
+  ];
 
-  var pre_second_train = [{
-      stimulus: ["<div class = 'center'><p>You have completed the first \
+  var pre_first_train = {
+    type: 'html-keyboard-response',
+    post_trial_gap: 300,
+    timeline: pre_first_train_text
+  };
+
+  var pre_second_train_text = [{
+      stimulus: ["<div class = 'inst'><p>You have completed the first \
       practice block</p>\
+      <br> <br>\
           <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class = 'center'><p>In the next part, some of the images \
+      stimulus: ["<div class = 'inst'><p>In the next part, some of the images \
     are going to appear scrambled.</p>\
     <p>Your task remains exactly the same. Respond to each image according to \
     whether it depicts an animate object, or only inanimate objects.</p>\
     <p>If the image appears too scrambled, do your best to guess whether it \
     depicts an animate object or not.</p>\
+    <br> <br>\
         <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class = 'center'><p>While your task remains the same \
+      stimulus: ["<div class = 'inst'><p>While your task remains the same \
       as before, during this part you will no recieve feedback on your responses.</p>\
+      <br> <br>\
         <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class = 'center'><p>Please perform this task as accurately \
+      stimulus: ["<div class = 'inst'><p>Please perform this task as accurately \
         and quickly as you can.</p>\
+        <br> <br>\
         <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class = 'center'><p>You will now proceeed with a short practice\
+      stimulus: ["<div class = 'inst'><p>You will now proceeed with a short practice\
      block.</p>\
+     <br> <br>\
         <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class='center'>\
+      stimulus: ["<div class = 'inst'>\
         <img src='/static/images/keys.jpg'></img>\
         <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
         and press either one of these keys to begin the practice.</p></div>"],
       choices: [68, 75]
     }
-  ]
+  ];
 
-  var pre_main_block = [{
-      stimulus: ["<div class = 'center'><p>You have completed the second \
+  var pre_second_train = {
+    type: 'html-keyboard-response',
+    post_trial_gap: 300,
+    timeline: pre_second_train_text
+  };
+
+
+  var pre_main_block_text = [{
+      stimulus: ["<div class = 'inst'><p>You have completed the second \
       practice block</p>\
+      <br> <br>\
           <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class = 'center'><p>You will now continue with the \
+      stimulus: ["<div class = 'inst'><p>You will now continue with the \
       same task.</p>\
       <p>You will have nine short breaks during this part.</p>\
+      <br> <br>\
         <p align='center'><i>Press the space bar to continue.</i></p></div>"],
       choices: [32]
     },
     {
-      stimulus: ["<div class='center'>\
+      stimulus: ["<div class = 'inst'>\
           <img src='/static/images/keys.jpg'></img>\
           <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
           and press either one of these keys to begin.</p></div>"],
       choices: [68, 75]
     }
-  ]
+  ];
+
+  var pre_main_block = {
+    type: 'html-keyboard-response',
+    post_trial_gap: 300,
+    timeline: pre_main_block_text
+  };
+
 
 
   // /** 4----- PRACTICE BLOCK  **/
@@ -637,7 +671,7 @@ var post_load = function() {
   //
   // var performanceMSG_practice = {
   //     type: 'html-keyboard-response',
-  //     stimulus: ["<div class='center'>\
+  //     stimulus: ["<div class = 'inst'>\
   //   <p>You pressed the wrong key too many times during the practice block.</p>\
   //   <p>Press either the 'D' or 'K' keys to repeat it.</p></div>"],
   //     choices: [68, 75],
@@ -659,7 +693,7 @@ var post_load = function() {
   //       }
   //     },
   //     timeline: [{
-  //       stimulus: "<div class='center'>\
+  //       stimulus: "<div class = 'inst'>\
   //   <p>It seems that you are not performing the task as instructed.</p>\
   //   <p>Please return this HIT.</p>\
   //   <p>If you feel that this is a mistake, please email \
@@ -702,7 +736,7 @@ var post_load = function() {
   // //** 5------main block instructions **//
   //
   // var mainBlockText = [{
-  //     stimulus: ["<div class = 'center'><p>You have completed the practice block.</p>\
+  //     stimulus: ["<div class = 'inst'><p>You have completed the practice block.</p>\
   //   <p>You will now continue with the same task. The task may now be more \
   //   difficult.\
   //   You will have 7 short breaks. </p>\
@@ -710,7 +744,7 @@ var post_load = function() {
   //     choices: [68, 75]
   //   },
   //   {
-  //     stimulus: ["<div class = 'center'><p>During the task, please focus your gaze at\
+  //     stimulus: ["<div class = 'inst'><p>During the task, please focus your gaze at\
   //    the plus sign in the middle.<br>Even though the faces appear to the left\
   //     and right of the plus sign, it is important that you look at the plus \
   //     sign at all times.</p>\
@@ -770,7 +804,7 @@ var post_load = function() {
   // /* Add breaks */
   // var breakMsg = {
   //   type: "html-keyboard-response",
-  //   stimulus: ["<div class = 'center'><p>This is a break.</p>\
+  //   stimulus: ["<div class = 'inst'><p>This is a break.</p>\
   //   <p>Press the space bar to continue.</p>"],
   //   choices: [32],
   //   timing_post_trial: 1600
@@ -780,7 +814,7 @@ var post_load = function() {
   // var behave = {
   //     type: "html-keyboard-response",
   //     timeline: [{
-  //       stimulus: "<div class = 'center'><p>It seems that you have pressed the wrong \
+  //       stimulus: "<div class = 'inst'><p>It seems that you have pressed the wrong \
   //   key many times recently.</p>\
   //   <p>Please perform the task as accurately and as quickly as you can.</p>\
   //   <p>Press the space bar to continue.</p>"
@@ -892,7 +926,7 @@ var post_load = function() {
   //       }
   //     },
   //     timeline: [{
-  //       stimulus: "<div class = 'center'>\
+  //       stimulus: "<div class = 'inst'>\
   // <p>It seems that the animation is not presented correctly on your computer.</p>\
   // <p>This may be due to old hardware, or too many open applications.</p>\
   // <p><b>Please return this HIT</b>.</p>\
@@ -917,7 +951,7 @@ var post_load = function() {
   //
   // var debrief = [{
   //     type: "html-keyboard-response",
-  //     stimulus: "<div class='center'>You have completed this part of the study.\
+  //     stimulus: "<div class = 'inst'>You have completed this part of the study.\
   //     <p>You will now answer several questions. Please answer them sincerely, \
   //     we remind you that your answers are completely annonymous.</p>\
   //     <p align='center'><i>Press the space bar to continue.</i></p></div>",
