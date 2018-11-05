@@ -914,8 +914,6 @@ var post_load = function() {
   experiment_blocks.push(pre_second_train);
   experiment_blocks.push(train_2);
   experiment_blocks.push(pre_main_block);
-  experiment_blocks.push(secChanceLoop);
-  experiment_blocks.push(mainBlockIns);
   experiment_blocks.push(main_block);
   experiment_blocks = experiment_blocks.concat(debrief);
 
