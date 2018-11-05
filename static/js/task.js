@@ -2,6 +2,8 @@
 var ITI = 1000,
   // unitSize = 4,
   train_1_n = 10,
+  train_1_rt_crit = 3500,
+  train_1_n_performance_thresh = 0.7,
   train_2_n = 16,
   breakEvery = 152,
   clar_range = [0.2, 0.8],
@@ -14,7 +16,6 @@ var ITI = 1000,
   training_allowed_repeat = 2,
   experiment_performance_thresh = .85,
   experiment_performance_trials = 20,
-  train_performance_thresh = .85,
   experiment_RT_trials = 8,
   experiment_RT_trial_threshold = 5,
   experiment_RT_threshold = 300;
@@ -36,7 +37,7 @@ Papa.parse("../static/sampImagesInfo.csv", {
       download: true,
       header: true,
       dynamicTyping: true,
-      complete: function(results){
+      complete: function(results) {
         train_images = results.data;
         post_load();
       }
@@ -374,15 +375,20 @@ var post_load = function() {
     <p>Press the space bar to continue.</p>"],
     choices: [32],
     post_trial_gap: 1600
-  }
+  };
+
+  var fixation_trial = {
+    type: 'html-keyboard-response',
+    stimulus: '<div id="fixation">+</div>',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 500,
+    data: {
+      category: 'fixation'
+    }
+  };
 
   main_block = {
-    timeline: [{
-        type: 'html-keyboard-response',
-        stimulus: '<div id="fixation">+</div>',
-        choices: jsPsych.NO_KEYS,
-        trial_duration: 500
-      },
+    timeline: [fixation_trial,
       {
         type: 'html-keyboard-response',
         choices: ['d', 'k'],
@@ -408,7 +414,8 @@ var post_load = function() {
           prev_indx: function() {
             return jsPsych.timelineVariable('prev_indx', true) + 1
           },
-          trial: jsPsych.timelineVariable('trial')
+          trial: jsPsych.timelineVariable('trial'),
+          category: 'task'
         },
         on_finish: function(data) {
           if (data.key_press == 75 && data.animate ||
@@ -543,6 +550,130 @@ var post_load = function() {
     type: 'html-keyboard-response',
     post_trial_gap: 300,
     timeline: pre_first_train_text
+  };
+
+  var train_1 = {
+    timeline: [
+      fixation_trial,
+      {
+        type: 'html-keyboard-response',
+        choices: ['d', 'k'],
+        trial_duration: train_1_rt_crit,
+        stimulus: function() {
+          var name = jsPsych.timelineVariable('name', true);
+          return '<img src="/static/images/' +
+            name + '" width = "517" height = "388"></img>'
+        },
+        data: {
+          name: jsPsych.timelineVariable('name'),
+          animate: jsPsych.timelineVariable('animate'),
+          category: 'task'
+        },
+        on_finish: function(data) {
+          if (data.key_press == 75 && data.animate ||
+            data.key_press == 68 && !data.animate) {
+            data.acc = 1;
+          } else {
+            data.acc = 0;
+          }
+        }
+      },
+      {
+        timeline: [{
+          type: 'html-keyboard-response',
+          stimulus: "<p class='feedback'>Too slow!</p>",
+          choices: jsPsych.NO_KEYS,
+          trial_duration: 1000,
+          post_trial_gap: 500,
+          data: {
+            category: 'feedback'
+          }
+        }],
+        conditional_function: function() {
+          return jsPsych.data.get().last(1).values()[0].key_press == null
+        }
+      },
+      {
+        timeline: [{
+          type: 'html-keyboard-response',
+          stimulus: function() {
+            var acc = jsPsych.data.get().last(1).values()[0].acc;
+            if (acc) {
+              return '<p class="feedback">Correct</p>'
+            } else {
+              return '<p class="feedback">Incorrect</p>'
+            }
+          },
+          post_trial_gap: 400,
+          trial_duration: 1000,
+          choices: jsPsych.NO_KEYS,
+          data: {
+            category: 'feedback'
+          }
+        }],
+        conditional_function: function() {
+          return !(jsPsych.data.get().last(1).values()[0].key_press == null)
+        }
+      }
+    ],
+    timeline_variables: jsPsych.randomization.shuffle(train_images.slice(0, train_1_n))
+  }
+
+  var performanceMSG_practice = {
+      timeline: [{
+        type: 'html-keyboard-response',
+        stimulus: ["<div class = 'inst'>\
+    <p>You pressed the wrong key too many times during the practice block.</p>\
+    <p>Press either the 'D' or 'K' keys to repeat it.</p></div>"],
+        choices: [68, 75]
+      }],
+      conditional_function: function(){
+        return jsPsych.data.get().last(1).select('category').values.length
+      }
+    },
+    stop_practice_loop = {
+      type: 'html-keyboard-response',
+      conditional_function: function() {
+        if (jsPsych.data.get().last(1).select('train_repeats').values[0] > training_allowed_repeat) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      timeline: [{
+        stimulus: "<div class = 'inst'>\
+    <p>It seems that you are not performing the task as instructed.</p>\
+    <p>Please return this HIT.</p>\
+    <p>If you feel that this is a mistake, please email \
+    ya2402+mturk@columbia.edu</p>\
+    <p>Press the space bar to continue.</p></div>"
+      }],
+      choices: [32],
+      on_finish: function() {
+        // psiturk.saveData({
+        //   success: function() {
+            jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
+        //   }
+        // });
+      }
+    }
+
+  jsPsych.data.addProperties({
+    train_repeats: 1
+  });
+
+  var secChanceLoop = {
+    timeline: [performanceMSG_practice, train_1, stop_practice_loop],
+    loop_function: function() {
+      if (jsPsych.data.get().filter({category: 'task'}).last(train_1_n).select('acc').mean() < train_1_n_performance_thresh) {
+        jsPsych.data.addProperties({
+          train_repeats: jsPsych.data.get().last(1).select('train_repeats').values[0] + 1
+        });
+        return true
+      } else {
+        return false
+      }
+    }
   };
 
   var pre_second_train_text = [{
@@ -1107,6 +1238,7 @@ var post_load = function() {
   var experiment_blocks = [];
   // experiment_blocks.push(fullscreen);
   experiment_blocks.push(pre_first_train);
+  experiment_blocks.push(secChanceLoop);
   experiment_blocks.push(pre_second_train);
   experiment_blocks.push(pre_main_block);
   // experiment_blocks.push(secChanceLoop);
