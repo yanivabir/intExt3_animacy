@@ -1,6 +1,8 @@
 // Parameters
 var ITI = 1000,
-  unitSize = 4,
+  // unitSize = 4,
+  train_1_n = 10,
+  train_2_n = 16,
   breakEvery = 152,
   clar_range = [0.2, 0.8],
   clar_nsteps = 10,
@@ -58,6 +60,13 @@ var post_load = function() {
 
   for (i = 0; i != n_total; i++) {
     var this_img = exp_images[i].name;
+    images.push('/static/images/' + this_img);
+    images.push('/static/images/' +
+      this_img.substr(0, this_img.length - 4) + '_s.jpg');
+  }
+
+  for (i = 0; i != train_1_n + train_2_n; i++) {
+    var this_img = train_images[i].name;
     images.push('/static/images/' + this_img);
     images.push('/static/images/' +
       this_img.substr(0, this_img.length - 4) + '_s.jpg');
