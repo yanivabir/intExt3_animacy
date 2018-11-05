@@ -831,158 +831,94 @@ var post_load = function() {
   };
 
 
+  //** 7---------Debrief **//
 
-  // //** 7---------Debrief **//
-  //
-  // var debrief = [{
-  //     type: "html-keyboard-response",
-  //     stimulus: "<div class = 'inst'>You have completed this part of the study.\
-  //     <p>You will now answer several questions. Please answer them sincerely, \
-  //     we remind you that your answers are completely annonymous.</p>\
-  //     <p align='center'><i>Press the space bar to continue.</i></p></div>",
-  //     choices: [32]
-  //   },
-  //   {
-  //     type: "survey-text",
-  //     questions: [{
-  //         prompt: "How old are you?",
-  //         columns: 20,
-  //         rows: 1,
-  //         value: ''
-  //       },
-  //       {
-  //         prompt: 'Have you been diagnosed with, or believe you have an attention deficit disorder?',
-  //         columns: 60,
-  //         rows: 1,
-  //         value: ''
-  //       }
-  //     ]
-  //   }, {
-  //     type: "survey-multi-choice",
-  //     questions: [{
-  //         prompt: "What is your gender?",
-  //         options: ["Male", "Female", "Other"],
-  //         required: true
-  //       },
-  //       {
-  //         prompt: "What is your dominant hand?",
-  //         options: ["Right", "Left", "Both"],
-  //         required: true
-  //       },
-  //       {
-  //         prompt: "Is English your native language?",
-  //         options: ["Yes", "No"],
-  //         required: true
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     type: 'survey-likert',
-  //     questions: [{
-  //       prompt: "How fluent are you in reading and understanding English?",
-  //       labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very fluent"],
-  //       required: true
-  //     }]
-  //   },
-  //   {
-  //     type: 'survey-text',
-  //     questions: [{
-  //       prompt: "Did you have any special strategy that helped you seeing \
-  //     the faces more quickly?",
-  //       columns: 100,
-  //       rows: 4,
-  //       value: ''
-  //     }],
-  //   },
-  //   {
-  //     type: 'survey-multi-choice',
-  //     questions: [{
-  //         prompt: "Do you consider yourself to be:",
-  //         options: ["Heterosexual or straight", "Gay or lesbian", "Bisexual", "Other"],
-  //         required: false
-  //       },
-  //       {
-  //         prompt: "People are different in their sexual attraction to other people.\
-  //   Which best describes your feelings?",
-  //         options: ["Only attracted to females", "Mostly attracted to females",
-  //           "Equally attracted to females and males", "Mostly attracted to males", "Only attracted to males", "Not sure"
-  //         ],
-  //         required: false
-  //       }
-  //     ]
-  //   }
-  // ].concat([{
-  //     type: "survey-multi-choice",
-  //     questions: [{
-  //       prompt: "Do you have a driver’s license?",
-  //       options: ["Yes", "No"],
-  //       required: true
-  //     }]
-  //   },
-  //   {
-  //     conditional_function: function() {
-  //       if (JSON.parse(jsPsych.data.get().last(1).select('responses').values).Q0 == 'Yes') {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     },
-  //     timeline: [{
-  //         type: 'survey-likert',
-  //         questions: [{
-  //           prompt: "Compared to the average driver, how would you rate your own driving?", //*reverse scored
-  //           labels: ["1<br>Much worse than average", "2", "3", "4", "5", "6", "7<br>Much better than average"],
-  //           required: true
-  //         }]
-  //       },
-  //       {
-  //         type: "survey-text",
-  //         questions: [{
-  //           prompt: "In your best estimate, how many accidents were you involved in during the last three years as a driver, including minor accidents with no injuries or damage? (If none, mark 0)",
-  //           columns: 20,
-  //           rows: 1,
-  //           value: ''
-  //         }],
-  //       }
-  //     ],
-  //   },
-  //   {
-  //     type: "survey-text",
-  //     questions: [{
-  //       prompt: 'In your best estimate, how many accidents were you involved in during the last three years as a pedestrian,\
-  // 		including minor accidents with no injuries or damage? (If none, mark 0)',
-  //       columns: 60,
-  //       rows: 1,
-  //       value: ''
-  //     }]
-  //   },
-  //   {
-  //     type: "html-keyboard-response",
-  //     stimulus: '<div class="center">Thank you for participating in this study!<p>\
-  //     In this study we were interested in examining reaction-times and \
-  //     precision in a dynamic environment.</p>\
-  //     <p>Once you press the space bar, your results will be uploaded to the \
-  //     server, and the HIT will complete. <b>This may take several minutes - do not \
-  //     refresh or close your browser during this time.</b></p>\
-  //     <p>Press the space bar to complete this HIT.</p></div>',
-  //     choices: [32]
-  //   }
-  // ]);
-  //
-  //
+  var debrief = [{
+      type: "html-keyboard-response",
+      stimulus: "<div class = 'inst'>You have completed this part of the study.\
+      <p>You will now answer several questions. Please answer them sincerely, \
+      we remind you that your answers are completely annonymous.</p>\
+      <p align='center'><i>Press the space bar to continue.</i></p></div>",
+      choices: [32]
+    },
+    {
+      type: "survey-text",
+      questions: [{
+          prompt: "How old are you?",
+          columns: 20,
+          rows: 1,
+          value: ''
+        },
+        {
+          prompt: 'Have you been diagnosed with, or believe you have an attention deficit disorder?',
+          columns: 60,
+          rows: 1,
+          value: ''
+        }
+      ]
+    }, {
+      type: "survey-multi-choice",
+      questions: [{
+          prompt: "What is your gender?",
+          options: ["Male", "Female", "Other"],
+          required: true
+        },
+        {
+          prompt: "What is your dominant hand?",
+          options: ["Right", "Left", "Both"],
+          required: true
+        },
+        {
+          prompt: "Is English your native language?",
+          options: ["Yes", "No"],
+          required: true
+        }
+      ]
+    },
+    {
+      type: 'survey-likert',
+      questions: [{
+        prompt: "How fluent are you in reading and understanding English?",
+        labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very fluent"],
+        required: true
+      }]
+    },
+    {
+      type: 'survey-text',
+      questions: [{
+        prompt: "Did you have any special strategy that helped you decide \
+      whether the images depicted animate objects?",
+        columns: 100,
+        rows: 4,
+        value: ''
+      }],
+    },
+    {
+      type: "html-keyboard-response",
+      stimulus: '<div class="center">Thank you for participating in this study!<p>\
+      In this study we were interested in examining reaction-times and \
+      precision in a dynamic environment.</p>\
+      <p>Once you press the space bar, your results will be uploaded to the \
+      server, and the HIT will complete. <b>This may take several minutes - do not \
+      refresh or close your browser during this time.</b></p>\
+      <p>Press the space bar to complete this HIT.</p></div>',
+      choices: [32]
+    }];
+
+
   // Put it all together
   var experiment_blocks = [];
-  // experiment_blocks.push(fullscreen);
-  // experiment_blocks.push(pre_first_train);
-  // experiment_blocks.push(secChanceLoop);
-  // experiment_blocks.push(pre_second_train);
+  experiment_blocks.push(fullscreen);
+  experiment_blocks.push(pre_first_train);
+  experiment_blocks.push(secChanceLoop);
+  experiment_blocks.push(pre_second_train);
   experiment_blocks.push(train_2);
   experiment_blocks.push(pre_main_block);
-  // experiment_blocks.push(secChanceLoop);
-  // experiment_blocks.push(mainBlockIns);
+  experiment_blocks.push(secChanceLoop);
+  experiment_blocks.push(mainBlockIns);
   experiment_blocks.push(main_block);
-  // experiment_blocks = experiment_blocks.concat(debrief);
-  //
+  experiment_blocks = experiment_blocks.concat(debrief);
+
   // Save data to file functions
   var textFile = null,
     makeTextFile = function(text) {
@@ -1038,13 +974,6 @@ var post_load = function() {
     on_data_update: function(data) {
       // psiturk.recordTrialData(data);
     },
-    preload_images: images,
-    on_trial_start: function() {
-      // Record start time of bRMS block
-      if (exp_start_time == 0 && jsPsych.currentTrial().type == 'bRMS') {
-        exp_start_time = d.getTime();
-        // psiturk.finishInstructions(); // advance status to 2
-      }
-    }
+    preload_images: images
   });
 }
