@@ -13,7 +13,7 @@ browser_exclude_rule = MSIE, mobile, tablet, bot
 allow_repeats = false
 
 [Database Parameters]
-database_url = mysql://greenlab:11cookies11@brms.c1lkfpz6aowj.us-east-2.rds.amazonaws.com:3306/brmsdb
+database_url = sqlite:///participants.db
 table_name = DeepShallow
 
 [Server Parameters]
