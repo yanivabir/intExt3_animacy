@@ -389,10 +389,10 @@ var post_load = function() {
       }).select('acc').mean() * 100);
       var rt = Math.round(jsPsych.data.get().filter({
         category: 'task'
-      }).last(breakEvery).select('rt').mean());
+      }).last(breakEvery).select('rt').mean() / 1000 * 100) / 100;
       return ["<div class = 'inst'><p>This is a break.</p>\
       <p>During this part, your answered correctly on " + acc + "% of images, \
-      taking an average " + rt + " milliseconds to answer.</p><br><br>\
+      taking an average " + rt + " seconds to answer.</p><br><br>\
     <p>Press the space bar to continue.</p>"]
     },
     choices: [32],
