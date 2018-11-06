@@ -514,7 +514,7 @@ var post_load = function() {
     },
     {
       stimulus: ["<div class = 'inst'><p><b><u>Example 1:</b></u> if presented with the image \
-      below, you should press the right key, because the image depcits an animate object.</p>\
+      below, you should press the right key, because the image depcits animate objects.</p>\
       <img src='/static/images/ex1.jpg'></img>\
       <br> <br>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
