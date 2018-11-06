@@ -13,8 +13,8 @@ browser_exclude_rule = MSIE, mobile, tablet, bot
 allow_repeats = false
 
 [Database Parameters]
-database_url = sqlite:///participants.db
-table_name = DeepShallow
+database_url = mysql://yanivabir:afarsemon@intext.cvs7awm8ommi.us-east-2.rds.amazonaws.com:3306/intext
+table_name = animacy
 
 [Server Parameters]
 host = 0.0.0.0

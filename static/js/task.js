@@ -5,7 +5,7 @@ var ITI = 1000,
   train_1_rt_crit = 3500,
   train_1_n_performance_thresh = 0.7,
   train_2_n = 16,
-  breakEvery = 15,
+  breakEvery = 152,
   clar_range = [0.2, 0.8],
   clar_nsteps = 10,
   clar_nsteps_train = 8,
@@ -392,7 +392,7 @@ var post_load = function() {
       }).last(breakEvery).select('rt').mean() / 1000 * 100) / 100;
       return ["<div class = 'inst'><p>This is a break.</p>\
       <p>During this part, your answered correctly on " + acc + "% of images, \
-      taking an average " + rt + " seconds to answer.</p><br><br>\
+      taking on average " + rt + " seconds to answer.</p><br><br>\
     <p>Press the space bar to continue.</p>"]
     },
     choices: [32],
@@ -939,11 +939,11 @@ var post_load = function() {
 
   // Put it all together
   var experiment_blocks = [];
-  // experiment_blocks.push(fullscreen);
-  // experiment_blocks.push(pre_first_train);
-  // experiment_blocks.push(secChanceLoop);
-  // experiment_blocks.push(pre_second_train);
-  // experiment_blocks.push(train_2);
+  experiment_blocks.push(fullscreen);
+  experiment_blocks.push(pre_first_train);
+  experiment_blocks.push(secChanceLoop);
+  experiment_blocks.push(pre_second_train);
+  experiment_blocks.push(train_2);
   experiment_blocks.push(pre_main_block);
   experiment_blocks.push(main_block);
   experiment_blocks = experiment_blocks.concat(debrief);
