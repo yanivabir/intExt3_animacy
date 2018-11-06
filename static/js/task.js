@@ -5,7 +5,7 @@ var ITI = 1000,
   train_1_rt_crit = 3500,
   train_1_n_performance_thresh = 0.7,
   train_2_n = 16,
-  breakEvery = 152,
+  breakEvery = 15,
   clar_range = [0.2, 0.8],
   clar_nsteps = 10,
   clar_nsteps_train = 8,
@@ -381,8 +381,20 @@ var post_load = function() {
   // Make main block
   var breakMsg = {
     type: "html-keyboard-response",
-    stimulus: ["<div class = 'inst'><p>This is a break.</p>\
-    <p>Press the space bar to continue.</p>"],
+    stimulus: function() {
+      var acc = Math.round(jsPscyh.data.get().filter({
+        category: 'task'
+      }).last(breakEvery).customFilter(function(x) {
+        return x.clar_level >= clar_levels[clar_nsteps - n_repeat_steps]
+      }).select('acc').mean() * 100);
+      var rt = Math.round(jsPsych.data.get().filter({
+        category: 'task'
+      }).last(breakEvery).select('rt').mean() * 100) / 100;
+      return ["<div class = 'inst'><p>This is a break.</p>\
+      <p>During this part, your answered correctly on" + acc + "% of images, \
+      taking on average " + rt + " seconds to ansewr.</p><br><br>\
+    <p>Press the space bar to continue.</p>"]
+    },
     choices: [32],
     post_trial_gap: 1600
   };
