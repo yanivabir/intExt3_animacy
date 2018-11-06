@@ -54,7 +54,9 @@ var post_load = function() {
     '/static/images/Dime.png',
     '/static/images/Quarter.png',
     '/static/images/keys.jpg',
-    '/static/images/coin_demo.jpg'
+    '/static/images/coin_demo.jpg',
+    '/static/images/ex1.jpg',
+    '/static/images/ex2.jpg'
   ];
 
   var n_total;
