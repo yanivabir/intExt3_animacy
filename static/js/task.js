@@ -384,7 +384,7 @@ var post_load = function() {
     stimulus: function() {
       var acc = Math.round(jsPsych.data.get().filter({
         category: 'task'
-      }).last(breakEvery).customFilter(function(x) {
+      }).last(breakEvery).filterCustom(function(x) {
         return x.clar_level >= clar_levels[clar_nsteps - n_repeat_steps]
       }).select('acc').mean() * 100);
       var rt = Math.round(jsPsych.data.get().filter({
