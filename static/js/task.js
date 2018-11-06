@@ -382,7 +382,7 @@ var post_load = function() {
   var breakMsg = {
     type: "html-keyboard-response",
     stimulus: function() {
-      var acc = Math.round(jsPscyh.data.get().filter({
+      var acc = Math.round(jsPsych.data.get().filter({
         category: 'task'
       }).last(breakEvery).customFilter(function(x) {
         return x.clar_level >= clar_levels[clar_nsteps - n_repeat_steps]
