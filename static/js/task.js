@@ -196,7 +196,7 @@ var post_load = function() {
 
 
   // Initiate psiturk
-  // var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
+  var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
   /** 1----coin instructions**/
 
@@ -660,11 +660,15 @@ var post_load = function() {
       }],
       choices: [32],
       on_finish: function() {
-        // psiturk.saveData({
-        //   success: function() {
-        jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
-        //   }
-        // });
+        psiturk.recordUnstructuredData('jsPsych_trial_data',
+          jsPsych.data.get().json());
+        psiturk.recordUnstructuredData('jsPsych_event_data',
+          jsPsych.data.getInteractionData().json());
+        psiturk.saveData({
+          success: function() {
+            jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
+          }
+        });
       }
     }
 
@@ -925,11 +929,11 @@ var post_load = function() {
   var experiment_blocks = [];
   experiment_blocks.push(fullscreen);
   experiment_blocks.push(pre_first_train);
-  // experiment_blocks.push(secChanceLoop);
-  // experiment_blocks.push(pre_second_train);
-  // experiment_blocks.push(train_2);
-  // experiment_blocks.push(pre_main_block);
-  // experiment_blocks.push(main_block);
+  experiment_blocks.push(secChanceLoop);
+  experiment_blocks.push(pre_second_train);
+  experiment_blocks.push(train_2);
+  experiment_blocks.push(pre_main_block);
+  experiment_blocks.push(main_block);
   experiment_blocks = experiment_blocks.concat(debrief);
 
   // Save data to file functions
@@ -972,19 +976,18 @@ var post_load = function() {
   jsPsych.init({
     timeline: experiment_blocks,
     on_finish: function(data) {
-      saveData(jsPsych.data.get().json(), 'test_data.txt')
-      // psiturk.recordUnstructuredData('jsPsych_trial_data',
-      //   jsPsych.data.get().json());
-      // psiturk.recordUnstructuredData('jsPsych_event_data',
-      //   jsPsych.data.getInteractionData().json());
-      // psiturk.saveData({
-      //   success: function() {
-      //     psiturk.completeHIT();
-      //   }
-      // })
+      psiturk.recordUnstructuredData('jsPsych_trial_data',
+        jsPsych.data.get().json());
+      psiturk.recordUnstructuredData('jsPsych_event_data',
+        jsPsych.data.getInteractionData().json());
+      psiturk.saveData({
+        success: function() {
+          psiturk.completeHIT();
+        }
+      })
     },
     on_data_update: function(data) {
-      // psiturk.recordTrialData(data);
+      psiturk.recordTrialData(data);
     },
     preload_images: images
   });
