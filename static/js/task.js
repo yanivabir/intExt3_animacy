@@ -70,8 +70,10 @@ var post_load = function() {
   for (i = 0; i != train_1_n + train_2_n; i++) {
     var this_img = train_images[i].name;
     images.push('/static/images/' + this_img);
-    images.push('/static/images/' +
-      this_img.substr(0, this_img.length - 4) + '_s.jpg');
+    if (i >= train_1_n) {
+      images.push('/static/images/' +
+        this_img.substr(0, this_img.length - 4) + '_s.jpg');
+    }
   }
 
   /* Prepare experimental main block*/
@@ -183,7 +185,7 @@ var post_load = function() {
     fullscreen_mode: true,
     message: '<p>This study runs in fullscreen. To switch to full screen mode \
     and start the HIT, press the button below.</p>',
-    on_finish: function(){
+    on_finish: function() {
       // Hide mouse
       var stylesheet = document.styleSheets[0];
       stylesheet.insertRule("* {cursor: none;}", stylesheet.cssRules.length);
@@ -913,7 +915,8 @@ var post_load = function() {
       refresh or close your browser during this time.</b></p>\
       <p>Press the space bar to complete this HIT.</p></div>',
       choices: [32]
-    }];
+    }
+  ];
 
 
   // Put it all together
