@@ -22,44 +22,61 @@
 <body>
   <div id="container-consent">
     <div id="consent">
-      <h1>We need your consent to proceed</h1>
+      <h1>Studies of Learning, Memory and Decision Making</h1>
+      <h1>Informed Consent Form</h1>
       <hr>
       <div class="legal well">
         <p>
-          You have been invited to take part in a study of visual attention. All answers provided will remain annonymus.
+          We invite you to participate in a research study investigating learning, memory and decision making. In this study, you will play computer games, answer questionnaires and/or take standardized cognitive tests.
         </p>
         <p>
-          Taking part in this study is voluntary. The study takes about 30 minutes to complete. <u>You will be paid upon completion of the study</u>.
+          Your participation in this study is entirely voluntary. You have the right to withdraw from the study at any time (even after you sign this consent form) or refuse to participate in any part of the study.
         </p>
-        <p><b><i>During this study you will be presented with
-          rapid flashes of images and shapes. These flashes may be harmful for
-          persons who are epileptic. If you have any history of epileptic seizures,
-          please return this HIT now, and do not proceed.</i></b></p>
-		    <p>
-		    If there is anything about this study or taking part in it that is unclear or that you do not understand, please contact the requester of this HIT.
-		    </p>
-                    <button type="button" class="btn btn-default btn-sm" onClick="window.print();">
-                    <span class="glyphicon glyphicon-print"></span> Print a copy of this
-                    </button>
-                </div>
+        <h2>Risks and Benefits</h2>
+        <p>There are neither any known risks nor any known benefits associated with this study.</p>
+        <h2>Compensation</h2>
+        <p>
+          Participants will be compensated at a rate of $4 for 60 minutes, as stipulated on Mechanical Turk. For this 75 minutes long experiment, compensation will be $5.
+        </p>
+        <h2>Contact Information</h2>
+        <p>
+          If you have any questions or concerns about this study, please contact any member of the research team, including the Principal Investigator, Dr. Daphna Shohamy (212-854-7560).
+        </p>
+        <p>
+          If at any time you have questions or concerns about your rights or welfare as a research subject, please contact Columbia University - Morningside Institutional Review Board. The Institutional Review Board is a committee organized to protect the rights and welfare of human subjects involved in research and operates independent of this research team.
+        </p>
+        <p>
+          Columbia University - Morningside Institutional Review Board<br>
+          615 West 131st Street<br>
+          212-851-7040
+        </p>
+        <h2>Mental Health Resources</h2>
+        <p> Your participation in this study will not include psychological counselling. In the event you seek such services, please contact the center below:<br>
+          National Hopeline Network 1-800-784-2433
+          <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="window.print();">
+          <span class="glyphicon glyphicon-print"></span> Print a copy of this
+        </button>
+      </div>
 
-                <hr>
-                <h4>Do you understand and consent to these terms?</h4>
-                <br>
+      <hr>
+      <h4>By clicking "YES", you indicate that, having read and understood the information provided, you have decided to participate.</h4>
+      <br>
 
-                <center>
-                    <button type="button" class="btn btn-primary btn-lg" onClick="window.location='/exp?hitId={{ hitid }}&assignmentId={{ assignmentid }}&workerId={{ workerid }}'">
-                    <span class="glyphicon glyphicon-ok"></span> I agree
-                    </button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="button" class="btn btn-danger btn-lg" onClick="onexit()">
-                    <span class="glyphicon glyphicon-ban-circle"></span> No thanks, I do not want to do this HIT
-                    </button>
-                </center>
+      <center>
+        <button type="button" class="btn btn-primary btn-lg" onClick="window.location='/exp?hitId={{ hitid }}&assignmentId={{ assignmentid }}&workerId={{ workerid }}'">
+          <span class="glyphicon glyphicon-ok"></span> Yes
+        </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-danger btn-lg" onClick="onexit()">
+          <span class="glyphicon glyphicon-ban-circle"></span> No thanks, I do not want to do this HIT
+        </button>
+      </center>
 
-            </div>
-        </div>
-    </body>
+    </div>
+  </div>
+</body>
+
 </html>
