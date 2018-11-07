@@ -27,6 +27,7 @@ var trial_plan;
 var lags = [];
 var main_block;
 var lastWarned = -experiment_performance_trials;
+var used_indx;
 
 Papa.parse("../static/sampImagesInfo.csv", {
   download: true,
@@ -143,8 +144,8 @@ var post_load = function() {
 
   // Create trial plan
   var plan_n = exp_images.length + high_clar.length, // total length
-    used_indx = [], // array of used indices for assignment
     c_rep_clar = 0; // Counter from clar leves
+  used_indx = []; // array of used indices for assignment
   trial_plan = new Array(plan_n); // Preallocate trial plan length
 
   // Run over images
@@ -170,6 +171,13 @@ var post_load = function() {
       // Draw lag
       var d = Math.floor(Math.random() *
         (rep_range[1] - rep_range[0] + 1) + rep_range[0]);
+      while (used_indx.includes(j + d))
+        {
+          d++;
+          if (d > rep_range[1]){
+            d = rep_range[0];
+          }
+        };
       this_rep.lag = d;
       lags.push(d);
 
@@ -682,8 +690,8 @@ var post_load = function() {
         psiturk.recordUnstructuredData('jsPsych_event_data',
           jsPsych.data.getInteractionData().json());
         psiturk.saveData({
-          success: function() {
-            jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
+        success: function() {
+        jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
           }
         });
       }
