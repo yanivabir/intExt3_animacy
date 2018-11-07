@@ -584,9 +584,10 @@ var post_load = function() {
         stimulus: function() {
           var name = jsPsych.timelineVariable('name', true);
           return '<img src="/static/images/' +
-            name + '" width = "517" height = "388"></img>\
-            <div class="resp_hint"><table><tr><td>Inanimate</td><td></td><td>\
-            </td><td>Animate</td></tr></table></div>'
+            name + '" width = "517" height = "388"></img><br><br><br>\
+            <div class="resp_hint"><table style="width: 700px"><tr>\
+            <td>Inanimate</td><td style="width: 70%"></td><td>Animate\
+            </td></tr></table></div>'
         },
         data: {
           name: jsPsych.timelineVariable('name'),
