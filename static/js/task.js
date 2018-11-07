@@ -574,6 +574,11 @@ var post_load = function() {
     timeline: pre_first_train_text
   };
 
+  var resp_hint = '<br><br><br>\
+  <div class="resp_hint"><table style="width: 700px"><tr>\
+  <td>Inanimate</td><td style="width: 70%"></td><td>Animate\
+  </td></tr></table></div>';
+
   var train_1 = {
     timeline: [
       fixation_trial,
@@ -584,10 +589,7 @@ var post_load = function() {
         stimulus: function() {
           var name = jsPsych.timelineVariable('name', true);
           return '<img src="/static/images/' +
-            name + '" width = "517" height = "388"></img><br><br><br>\
-            <div class="resp_hint"><table style="width: 700px"><tr>\
-            <td>Inanimate</td><td style="width: 70%"></td><td>Animate\
-            </td></tr></table></div>'
+            name + '" width = "517" height = "388"></img>' + resp_hint
         },
         data: {
           name: jsPsych.timelineVariable('name'),
@@ -792,7 +794,7 @@ var post_load = function() {
             <img class = "mask_img" src="/static/images/' +
             name.substr(0, name.length - 4) +
             '_s.jpg" style="opacity: ' +
-            (1 - cl) + '" width = "517" height = "388"></img>'
+            (1 - cl) + '" width = "517" height = "388"></img>' + resp_hint
         },
         data: {
           name: jsPsych.timelineVariable('name'),
