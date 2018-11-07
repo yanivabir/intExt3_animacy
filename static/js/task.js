@@ -2,7 +2,7 @@
 var ITI = 1000,
   // unitSize = 4,
   train_1_n = 10,
-  train_1_rt_crit = 113500,
+  train_1_rt_crit = 3500,
   train_1_n_performance_thresh = 0.7,
   train_2_n = 16,
   breakEvery = 152,
@@ -944,7 +944,7 @@ var post_load = function() {
 
   // Put it all together
   var experiment_blocks = [];
-  // experiment_blocks.push(fullscreen);
+  experiment_blocks.push(fullscreen);
   experiment_blocks.push(pre_first_train);
   experiment_blocks.push(secChanceLoop);
   experiment_blocks.push(pre_second_train);
