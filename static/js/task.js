@@ -2,7 +2,7 @@
 var ITI = 1000,
   // unitSize = 4,
   train_1_n = 10,
-  train_1_rt_crit = 3500,
+  train_1_rt_crit = 113500,
   train_1_n_performance_thresh = 0.7,
   train_2_n = 16,
   breakEvery = 152,
@@ -586,7 +586,7 @@ var post_load = function() {
           return '<img src="/static/images/' +
             name + '" width = "517" height = "388"></img>\
             <div class="resp_hint"><table><tr><td>Inanimate</td><td></td><td>\
-            </td><td>Animate></td></tr></table></div>'
+            </td><td>Animate</td></tr></table></div>'
         },
         data: {
           name: jsPsych.timelineVariable('name'),
