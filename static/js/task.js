@@ -942,7 +942,7 @@ var post_load = function() {
   // Put it all together
   var experiment_blocks = [];
   // experiment_blocks.push(fullscreen);
-  // experiment_blocks.push(pre_first_train);
+  experiment_blocks.push(pre_first_train);
   experiment_blocks.push(secChanceLoop);
   experiment_blocks.push(pre_second_train);
   experiment_blocks.push(train_2);
