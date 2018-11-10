@@ -538,7 +538,7 @@ var post_load = function() {
     },
     {
       stimulus: ["<div class = 'inst'><p><b><u>Example 1:</b></u> if presented with the image \
-      below, you should press the right key, because the image depcits animate objects.</p>\
+      below, you should press the right key, because the image depcits animate beings.</p>\
       <img src='/static/images/ex1.jpg'></img>\
       <br> <br>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>"],
@@ -930,7 +930,7 @@ var post_load = function() {
       type: 'survey-text',
       questions: [{
         prompt: "Did you have any special strategy that helped you decide \
-      whether the images depicted animate objects?",
+      whether the images depicted animate beings?",
         columns: 100,
         rows: 4,
         value: ''
