@@ -13,6 +13,7 @@ var ITI = 1000,
   n_new = 1, // sum to Ntotal
   n_repeat_steps = 3,
   n_quant_mem = 40,
+  n_feedback_steps = 6, // How many clar levels to include in acc feedback
   rep_range = [30, 80],
   training_allowed_repeat = 2,
   experiment_performance_thresh = .85,
@@ -393,7 +394,7 @@ var post_load = function() {
       var acc = Math.round(jsPsych.data.get().filter({
         category: 'task'
       }).last(breakEvery).filterCustom(function(x) {
-        return x.clar_level >= clar_levels[clar_nsteps - n_repeat_steps]
+        return x.clar_level >= clar_levels[clar_nsteps - n_feedback_steps]
       }).select('acc').mean() * 100);
       var rt = Math.round(jsPsych.data.get().filter({
         category: 'task'
