@@ -1017,8 +1017,6 @@ var post_load = function() {
   jsPsych.init({
     timeline: experiment_blocks,
     on_finish: function(data) {
-      psiturk.recordUnstructuredData('jsPsych_trial_data',
-        jsPsych.data.get().json());
       psiturk.recordUnstructuredData('jsPsych_event_data',
         jsPsych.data.getInteractionData().json());
       psiturk.saveData({
