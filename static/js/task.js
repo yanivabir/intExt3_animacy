@@ -878,7 +878,10 @@ var post_load = function() {
       <p>You will now answer several questions. Please answer them sincerely, \
       we remind you that your answers are completely annonymous.</p>\
       <p align='center'><i>Press the space bar to continue.</i></p></div>",
-      choices: [32]
+      choices: [32],
+      data: {
+        category: 'debrief'
+      }
     },
     {
       type: "survey-text",
@@ -899,6 +902,9 @@ var post_load = function() {
         // Return mouse
         var stylesheet = document.styleSheets[0];
         stylesheet.deleteRule(stylesheet.cssRules.length - 1);
+      },
+      data: {
+        category: 'debrief'
       }
     }, {
       type: "survey-multi-choice",
@@ -917,7 +923,10 @@ var post_load = function() {
           options: ["Yes", "No"],
           required: true
         }
-      ]
+      ],
+      data: {
+        category: 'debrief'
+      }
     },
     {
       type: 'survey-likert',
@@ -925,7 +934,10 @@ var post_load = function() {
         prompt: "How fluent are you in reading and understanding English?",
         labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very fluent"],
         required: true
-      }]
+      }],
+      data: {
+        category: 'debrief'
+      }
     },
     {
       type: 'survey-text',
@@ -936,6 +948,9 @@ var post_load = function() {
         rows: 4,
         value: ''
       }],
+      data: {
+        category: 'debrief'
+      }
     },
     {
       type: "html-keyboard-response",
