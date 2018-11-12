@@ -859,7 +859,10 @@ var post_load = function() {
           <img src='/static/images/keys.jpg'></img>\
           <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
           and press either one of these keys to begin.</p></div>"],
-      choices: [68, 75]
+      choices: [68, 75],
+      on_finish: function(){
+        psiturk.finishInstructions();
+      }
     }
   ];
 
