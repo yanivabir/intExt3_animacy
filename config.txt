@@ -14,7 +14,7 @@ browser_exclude_rule = MSIE, mobile, tablet, bot
 allow_repeats = false
 
 [Database Parameters]
-database_url = mysql://yanivabir:afarsemon@intext.cvs7awm8ommi.us-east-2.rds.amazonaws.com:3306/intext
+database_url = sqlite:///participants.db
 table_name = animacy
 
 [Server Parameters]
@@ -26,7 +26,7 @@ loglevel = 1
 debug = false
 login_username = examplename
 login_pw = examplepassword
-threads = auto
+threads = 1
 
 [Task Parameters]
 experiment_code_version = 1.0
