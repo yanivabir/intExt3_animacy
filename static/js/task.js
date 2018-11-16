@@ -977,8 +977,15 @@ var post_load = function() {
         psiturk.recordUnstructuredData('jsPsych_event_data',
           jsPsych.data.getInteractionData().json());
         psiturk.saveData({
+          success: function() {
+            psiturk.completeHIT();
+          },
           error: function() {
-            psiturk.saveData();
+            psiturk.saveData({
+              success: function() {
+                psiturk.completeHIT();
+              },
+            });
           }
         });
       }
@@ -1034,9 +1041,6 @@ var post_load = function() {
   // Initiate experiment
   jsPsych.init({
     timeline: experiment_blocks,
-    on_finish: function() {
-          psiturk.completeHIT();
-    },
     on_data_update: function(data) {
       psiturk.recordTrialData(data);
     },
