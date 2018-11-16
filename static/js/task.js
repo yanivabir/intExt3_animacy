@@ -172,13 +172,12 @@ var post_load = function() {
       // Draw lag
       var d = Math.floor(Math.random() *
         (rep_range[1] - rep_range[0] + 1) + rep_range[0]);
-      while (used_indx.includes(j + d))
-        {
-          d++;
-          if (d > rep_range[1]){
-            d = rep_range[0];
-          }
-        };
+      while (used_indx.includes(j + d)) {
+        d++;
+        if (d > rep_range[1]) {
+          d = rep_range[0];
+        }
+      };
       this_rep.lag = d;
       lags.push(d);
 
@@ -691,8 +690,8 @@ var post_load = function() {
         psiturk.recordUnstructuredData('jsPsych_event_data',
           jsPsych.data.getInteractionData().json());
         psiturk.saveData({
-        success: function() {
-        jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
+          success: function() {
+            jsPsych.endExperiment('The experiment has been aborted. Please return HIT.');
           }
         });
       }
@@ -860,7 +859,7 @@ var post_load = function() {
           <p>Place your fingers on the 'D' and 'K' keys as shown in the picture, \
           and press either one of these keys to begin.</p></div>"],
       choices: [68, 75],
-      on_finish: function(){
+      on_finish: function() {
         psiturk.finishInstructions();
       }
     }
@@ -965,6 +964,23 @@ var post_load = function() {
       refresh or close your browser during this time.</b></p>\
       <p>Press the space bar to complete this HIT.</p></div>',
       choices: [32]
+    },
+    {
+      type: "html-keyboard-response",
+      stimulus: "<div class='inst'><p>Data uploading. To ensure proper completion \
+      of the HIT, please don't refresh, \
+      close your browser or open another tab.\
+      .</p></div>",
+      choices: [32],
+      on_finish: function() {
+        psiturk.recordUnstructuredData('jsPsych_event_data',
+          jsPsych.data.getInteractionData().json());
+        psiturk.saveData({
+          error: function() {
+            psiturk.saveData();
+          }
+        });
+      }
     }
   ];
 
@@ -976,8 +992,8 @@ var post_load = function() {
   experiment_blocks.push(secChanceLoop);
   experiment_blocks.push(pre_second_train);
   experiment_blocks.push(train_2);
-  experiment_blocks.push(pre_main_block);
-  experiment_blocks.push(main_block);
+  // experiment_blocks.push(pre_main_block);
+  // experiment_blocks.push(main_block);
   experiment_blocks = experiment_blocks.concat(debrief);
 
   // Save data to file functions
@@ -1015,18 +1031,10 @@ var post_load = function() {
 
 
   // Initiate experiment
-  var exp_start_time = 0;
-  var d = new Date();
   jsPsych.init({
     timeline: experiment_blocks,
-    on_finish: function(data) {
-      psiturk.recordUnstructuredData('jsPsych_event_data',
-        jsPsych.data.getInteractionData().json());
-      psiturk.saveData({
-        success: function() {
+    on_finish: function() {
           psiturk.completeHIT();
-        }
-      })
     },
     on_data_update: function(data) {
       psiturk.recordTrialData(data);
