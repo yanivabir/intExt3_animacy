@@ -971,7 +971,8 @@ var post_load = function() {
       of the HIT, please don't refresh, \
       close your browser or open another tab.\
       .</p></div>",
-      choices: [32],
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 1000,
       on_finish: function() {
         psiturk.recordUnstructuredData('jsPsych_event_data',
           jsPsych.data.getInteractionData().json());
